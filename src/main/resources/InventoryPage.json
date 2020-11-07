@@ -1,0 +1,37 @@
+{
+  "inventoryName": "Shop",
+  "page1":{
+    "size": 36,
+    "_comment": "size must be a multiple of 9 and the number of items cannot exceed the size",
+    "items": {
+
+      "0": {
+        "material": "STONE",
+        "amount": 1,
+        "lore": [],
+        "glow": false,
+        "_comment1": "glow is for force enchanted glow. This is not needed if there are enchantments in the enchantments section",
+        "displayName": "Dyes",
+        "enchantments": {
+          "DURABILITY": 2
+        },
+        "NBTData": {
+          "Key": "Data"
+        },
+        "shopData": {
+          "_comment": "goTo - directs to a different inventory. buyPrice - price to buy item. sellPrice - price to sell item. IF THERE IS NONE, SET IT TO null",
+          "goTo": "Dyes.json",
+          "buyPrice": 20,
+          "sellPrice": 20,
+          "addEnchantment": {
+            "enabled": true,
+            "enchantment": "SHARPNESS"
+          }
+        }
+
+      }
+    }
+
+  }
+
+}

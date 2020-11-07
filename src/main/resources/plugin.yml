@@ -1,0 +1,15 @@
+name: PandoraShop2
+version: ${project.version}
+main: me.nanigans.pandorashop2.PandoraShop2
+authors: [ProNanigans]
+description: Custom shop for pandora pvp with configs this time
+website: www.dustie.xyz
+depends: [UltraPermissions]
+commands:
+  nbtshow:
+    description: "Gets all nbt data on the item being held"
+    usage: /nbtshow
+  createshop:
+    description: "Create a new shop"
+    usage: /createshop <shopname>
+    aliase: ["cs", "newshop", "shopnew", "shopcreate"]
