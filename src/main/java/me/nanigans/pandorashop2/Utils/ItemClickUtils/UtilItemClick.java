@@ -38,20 +38,21 @@ public class UtilItemClick {
 
    public void buyPrice(Map<String, Object> buyPriceMap){
        if(buyPriceMap.containsKey("sellPrice") && buyPriceMap.get("sellPrice") != null)
-           purchaseItem(Integer.parseInt(buyPriceMap.get("sellPrice").toString()));
+           purchaseItem(buyPriceMap);
    }
    public void sellPrice(Map<String, Object> sellPriceMap){
        if(sellPriceMap.containsKey("sellPrice") && sellPriceMap.get("sellPrice") != null)
-       purchaseItem(Integer.parseInt(sellPriceMap.get("sellPrice").toString()));
+       purchaseItem(sellPriceMap);
    }
 
-   public void purchaseItem(int price){
+   public void purchaseItem(Map<String, Object> boughtItem){
 
        try {
            File purchase = ConfigCreators.createFile(this.shopInfo.getShopNameDir() + "/PurchaseInventory.json");
            purchase = ConfigCreators.createDefaultJsonData(purchase, PandoraShop2.getPlugin(PandoraShop2.class));
 
-           Inventory inv = InventoryUtils.createInventoryShop(purchase.getPath(), 1, this.shopInfo.getPlayer());
+           Inventory inv = InventoryUtils.createPurchaseInventory(this.shopInfo.getShopNameDir()+"/PurchaseInventory.json",
+                   this.shopInfo.getCurrentShopPath(), this.shopInfo.getPage(), boughtItem, this.shopInfo.getPlayer());
            if(inv != null) {
                this.shopInfo.getPlayer().openInventory(inv);
                this.shopInfo.setInv(inv);
