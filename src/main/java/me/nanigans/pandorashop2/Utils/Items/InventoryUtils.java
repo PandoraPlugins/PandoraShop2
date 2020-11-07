@@ -31,7 +31,7 @@ public class InventoryUtils {
 
         shopPath = ShopPath.shopPath(shopPath, plugin);
         JsonUtils jsonPurchase = new JsonUtils(shopPath);//purchaseInventory json
-        JsonUtils jsonClicked = new JsonUtils(previousShopPath); // item clicked inv
+        //JsonUtils jsonClicked = new JsonUtils(previousShopPath); // item clicked inv
 
         final Map<String, Object> purchaseInvData = ShopPath.getConfigSectionValue(jsonPurchase.getData("page1.items"), true);
 

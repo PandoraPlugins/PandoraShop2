@@ -54,16 +54,20 @@ public class Items {
 
         Map<String, Object> shopData = ((Map<String, Object>) itemData.get("shopData"));
         if(shopData.containsKey("buyPrice") && shopData.get("buyPrice") != null){
+            int amount = Integer.parseInt(itemData.get("amount").toString());
+            int price = Integer.parseInt(shopData.get("buyPrice").toString());
 
             List<String> lore = meta.getLore() == null ? new ArrayList<>() : meta.getLore();
-            lore.add(ChatColor.GRAY+"Buy Price: $" +ChatColor.RED+ shopData.get("buyPrice").toString());
+            lore.add(ChatColor.GRAY+"Buy Price: $" +ChatColor.RED+ (amount*price));
             meta.setLore(lore);
         }
 
         if(shopData.containsKey("sellPrice") && shopData.get("sellPrice") != null){
+            int amount = Integer.parseInt(itemData.get("amount").toString());
+            int price = Integer.parseInt(shopData.get("sellPrice").toString());
 
             List<String> lore = meta.getLore() == null ? new ArrayList<>() : meta.getLore();
-            lore.add(ChatColor.GRAY+"Sell Price: $" +ChatColor.GREEN+ shopData.get("sellPrice"));
+            lore.add(ChatColor.GRAY+"Sell Price: $" +ChatColor.GREEN+ (amount*price));
             meta.setLore(lore);
         }
 
@@ -135,14 +139,19 @@ public class Items {
         if(json.getData(itemPath+".shopData.buyPrice") != null){
 
             List<String> lore = meta.getLore() == null ? new ArrayList<>() : meta.getLore();
-            lore.add(ChatColor.GRAY+"Buy Price: $" +ChatColor.RED+ json.getData(itemPath+".shopData.buyPrice").toString());
+            int amount = Integer.parseInt(json.getData(itemPath+".amount").toString());
+
+            int price = Integer.parseInt(json.getData(itemPath+".shopData.buyPrice").toString());
+            lore.add(ChatColor.GRAY+"Buy Price: $" +ChatColor.RED+ (amount*price));
             meta.setLore(lore);
         }
 
         if(json.getData(itemPath+".shopData.sellPrice") != null){
+            int amount = Integer.parseInt(json.getData(itemPath+".amount").toString());
+            int price = Integer.parseInt(json.getData(itemPath+".shopData.sellPrice").toString());
 
             List<String> lore = meta.getLore() == null ? new ArrayList<>() : meta.getLore();
-            lore.add(ChatColor.GRAY+"Sell Price: $" +ChatColor.GREEN+ json.getData(itemPath+".shopData.sellPrice").toString());
+            lore.add(ChatColor.GRAY+"Sell Price: $" +ChatColor.GREEN+ (amount*price));
             meta.setLore(lore);
         }
 

@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class UtilItemClick {
 
-    private static final List<String> utilList = Arrays.asList("goTo", "purchase", "sell", "pageForward", "pageBackwards");
+    private static final List<String> utilList = Arrays.asList("goTo", "purchaseButton", "sellButton", "pageForward", "pageBackwards");
     private ShopClickEvents shopInfo;
 
    public UtilItemClick(Map<String, Object> jsonItem, ShopClickEvents shopInfo) {
