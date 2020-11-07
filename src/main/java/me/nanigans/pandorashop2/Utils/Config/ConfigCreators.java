@@ -68,7 +68,7 @@ public class ConfigCreators {
 
         File configFile = new File(plugin.getDataFolder()+"/InventoryPage.json");
 
-        if(!file.exists())
+        if(!file.exists() || FileUtils.sizeOf(file) < 5)
         FileUtils.copyFile(configFile, file, true);
 
         return file;

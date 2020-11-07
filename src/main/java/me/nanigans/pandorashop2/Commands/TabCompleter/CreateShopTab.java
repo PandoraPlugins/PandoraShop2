@@ -24,8 +24,8 @@ public class CreateShopTab implements org.bukkit.command.TabCompleter {
                 try {
 
                     File diectories = ConfigCreators.createPath(plugin.getDataFolder()+"/Shops");
-                    if(diectories.listFiles() != null)
-                    return Arrays.stream(diectories.listFiles()).map(i -> i.getName()).filter(i -> i.contains(".") && !i.startsWith(".DS")).filter(i -> i.startsWith(args[0])).collect(Collectors.toList());
+                    if(diectories.list() != null)
+                    return Arrays.stream(diectories.list()).filter(i -> !i.contains(".json") && !i.startsWith(".DS")).filter(i -> i.startsWith(args[0])).collect(Collectors.toList());
 
                 } catch (IOException e) {
                     e.printStackTrace();

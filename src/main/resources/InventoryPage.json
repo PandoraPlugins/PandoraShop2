@@ -7,11 +7,11 @@
 
       "0": {
         "material": "STONE",
+        "displayName": "Example",
         "amount": 1,
         "lore": [],
         "glow": false,
         "_comment1": "glow is for force enchanted glow. This is not needed if there are enchantments in the enchantments section",
-        "displayName": "Dyes",
         "enchantments": {
           "DURABILITY": 2
         },

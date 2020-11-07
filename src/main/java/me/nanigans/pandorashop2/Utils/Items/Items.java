@@ -69,13 +69,17 @@ public class Items {
         }
 
         if(Boolean.parseBoolean(json.getData(itemPath+".glow").toString())){
-            item.addUnsafeEnchantment(new Glow(70), 1);
+            meta.addEnchant(new Glow(70), 1, true);
         }
 
         JSONObject enchants = (JSONObject) json.getData(itemPath+".enchantments");
 
         if(enchants != null && enchants.size() > 0){
-            enchants.forEach((i, j) -> item.addUnsafeEnchantment(Enchantments.getByName(i.toString()), Integer.parseInt(j.toString())));
+
+            for (Map.Entry<String, Object> o : ((Map<String, Object>)enchants).entrySet()) {
+                meta.addEnchant(Enchantments.getByName(o.getKey()), Integer.parseInt(o.getValue().toString()), true);
+            }
+
         }
 
         item.setItemMeta(meta);
@@ -84,7 +88,9 @@ public class Items {
 
         if(nbts != null && nbts.size() > 0){
 
-            nbts.forEach((i, j) -> setNBT(item, i.toString(), j.toString()));
+            for (Map.Entry<String, String> o : ((Map<String, String>)nbts).entrySet()) {
+                item = setNBT(item, o.getKey(), o.getValue());
+            }
 
         }
 

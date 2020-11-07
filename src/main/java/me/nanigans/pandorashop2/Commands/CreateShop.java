@@ -23,8 +23,9 @@ public class CreateShop implements CommandExecutor {
                     Player player = ((Player) sender);
 
                     NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, ChatColor.translateAlternateColorCodes('&', args[0]));
+                    npc.data().setPersistent("IsShop", plugin.getDataFolder() + "/Shops/" + ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', npc.getName())));
+
                     npc.spawn(player.getLocation());
-                    npc.data().set("IsShop", plugin.getDataFolder() + "/Shops/" + ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', npc.getName())));
 
                     player.sendMessage(ChatColor.GREEN+"Shop: " + ChatColor.YELLOW+args[0] + ChatColor.GREEN+" created!");
 
