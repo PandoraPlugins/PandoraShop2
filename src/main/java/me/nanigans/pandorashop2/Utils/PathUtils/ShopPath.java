@@ -9,7 +9,6 @@ public class ShopPath {
 
     public static String shopPath(String shopPath, PandoraShop2 plugin){
 
-        System.out.println("shopPath = " + shopPath);
         if(!shopPath.startsWith(plugin.getDataFolder().getPath()))
             shopPath = plugin.getDataFolder()+"/"+shopPath;
 

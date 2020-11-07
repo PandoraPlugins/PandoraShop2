@@ -48,6 +48,7 @@ public class ShopClickEvents implements Listener {
             if(clicked != null){
 
                 Map<String, Object> item = Items.getJsonItem(event.getSlot(), this.page, this.currentShopPath);
+                if(item != null)
                 new UtilItemClick(item, this);
 
             }

@@ -25,7 +25,7 @@ public class UtilItemClick {
        for (Map.Entry<String, Object> method : shopData.entrySet()) {
 
            try {
-               this.getClass().getMethod(method.getKey(), Map.class).invoke(method.getKey(), shopData);
+               this.getClass().getMethod(method.getKey(), Map.class).invoke(this, shopData);
            }catch(NoSuchMethodException | InvocationTargetException | IllegalAccessException ignored){
            }
 
@@ -37,20 +37,14 @@ public class UtilItemClick {
 
        if(goToMap.containsKey("goTo") && goToMap.get("goTo") != null){
 
-           String dir = this.shopInfo.getShopNameDir()+goToMap.get("goTo");
-
-           this.shopInfo.getPlayer().closeInventory();
+           String dir = this.shopInfo.getShopNameDir()+"/"+goToMap.get("goTo");
 
            Inventory inv = InventoryUtils.createInventoryShop(dir, this.shopInfo.getPage(), this.shopInfo.getPlayer());
            if(inv != null) {
                this.shopInfo.getPlayer().openInventory(inv);
                this.shopInfo.setInv(inv);
                this.shopInfo.setCurrentShopPath(dir);
-           }else{
-               this.shopInfo.getPlayer().sendMessage(ChatColor.RED+"This shop does not yet exist. Please create it first");
-
            }
-
 
        }
 

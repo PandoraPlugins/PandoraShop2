@@ -25,7 +25,6 @@ public class NPCEvents implements Listener {
 
         Player player = event.getClicker();
         NPC npc = event.getNPC();
-        System.out.println("event.getNPC().data().get(\"IsShop\") = " + event.getNPC().data().get("IsShop"));
 
         if(npc.data().has("IsShop")) {
             File toDir = ConfigCreators.createFile(npc.data().get("IsShop")+"/Categories.json");
