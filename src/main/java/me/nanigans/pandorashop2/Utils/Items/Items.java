@@ -4,6 +4,7 @@ import com.earth2me.essentials.Enchantments;
 import me.nanigans.pandorashop2.Utils.Config.ConfigCreators;
 import me.nanigans.pandorashop2.Utils.Config.JsonUtils;
 import me.nanigans.pandorashop2.Utils.Glow;
+import me.nanigans.pandorashop2.Utils.PathUtils.ShopPath;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -19,6 +20,14 @@ import java.io.IOException;
 import java.util.*;
 
 public class Items {
+
+
+    public static Map<String, Object> getJsonItem(int itemLoc, int page, String path) throws IOException, ParseException {
+
+        JsonUtils json = new JsonUtils(path);
+        return ShopPath.getConfigSectionValue(json.getData("page"+page+".items."+itemLoc), true);
+
+    }
 
     /**
      * This creates a new itemstack from the json file that is specified. It will create the:

@@ -6,8 +6,8 @@
     "items": {
 
       "0": {
-        "material": "STONE",
-        "displayName": "Example",
+        "material": "AIR",
+        "displayName": "Example_Item",
         "amount": 1,
         "lore": [],
         "glow": false,
@@ -19,8 +19,11 @@
           "Key": "Data"
         },
         "shopData": {
-          "_comment": "goTo - directs to a different inventory. buyPrice - price to buy item. sellPrice - price to sell item. IF THERE IS NONE, SET IT TO null",
+          "_comment1": "goTo - directs to a different inventory. buyPrice - price to buy item. sellPrice - price to sell item. IF THERE IS NONE, SET IT TO null",
           "goTo": "Dyes.json",
+          "_comment2": "^ 'back' to go back a page | This directory starts from the current shop folder and appends to it. /Shops/SHOPNAME",
+          "purchaseButton": true,
+          "sellButton": false,
           "buyPrice": 20,
           "sellPrice": 20,
           "addEnchantment": {

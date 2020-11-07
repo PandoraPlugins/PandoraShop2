@@ -32,8 +32,10 @@ public class NPCEvents implements Listener {
             ConfigCreators.createDefaultJsonData(toDir, plugin);
 
             Inventory inv = InventoryUtils.createInventoryShop(npc.data().get("IsShop") + "/Categories.json", 1, player);
-            if(inv != null)
-            player.openInventory(inv);
+            if(inv != null) {
+                player.openInventory(inv);
+                new ShopClickEvents(player, inv, npc.data().get("IsShop").toString());
+            }
         }
     }
 
