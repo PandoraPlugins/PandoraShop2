@@ -2,7 +2,6 @@ package me.nanigans.pandorashop2.Utils.ItemClickUtils;
 
 import me.nanigans.pandorashop2.Events.ShopClickEvents;
 import me.nanigans.pandorashop2.Utils.Items.InventoryUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
 import org.json.simple.parser.ParseException;
 
@@ -33,6 +32,13 @@ public class UtilItemClick {
 
    }
 
+
+    /**
+     * Opens a new inventory for the player based on the item clicked
+     * @param goToMap The shop data map for the item clicked
+     * @throws IOException yeah
+     * @throws ParseException yeah
+     */
    public void goTo(Map<String, Object> goToMap) throws IOException, ParseException {
 
        if(goToMap.containsKey("goTo") && goToMap.get("goTo") != null){
