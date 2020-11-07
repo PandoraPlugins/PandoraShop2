@@ -30,6 +30,75 @@ public class Items {
     }
 
     /**
+     * Creates a shop item based on the json data directly
+     * @param itemData the item data of the itemstack
+     * @return the itemstack created
+     */
+    public static ItemStack createShopItem(Map<String, Object> itemData){
+
+        if(!itemData.containsKey("material") || itemData.get("material") == null) return null;
+        ItemStack item = new ItemStack(Material.valueOf(itemData.get("material").toString()));
+
+        item.setAmount(Integer.parseInt(itemData.get("amount").toString()));
+
+        ItemMeta meta = item.getItemMeta();
+
+        if(itemData.containsKey("displayName") && itemData.get("displayName") != null)
+            meta.setDisplayName(itemData.get("displayName").toString());
+
+        JSONArray arr = ((JSONArray) itemData.get("lore"));
+        if(arr.size() != 0) {
+            List<String> lore = ((List<String>) arr);
+            meta.setLore(lore);
+        }
+
+        Map<String, Object> shopData = ((Map<String, Object>) itemData.get("shopData"));
+        if(shopData.containsKey("buyPrice") && shopData.get("buyPrice") != null){
+
+            List<String> lore = meta.getLore() == null ? new ArrayList<>() : meta.getLore();
+            lore.add(ChatColor.GRAY+"Buy Price: $" +ChatColor.RED+ shopData.get("buyPrice").toString());
+            meta.setLore(lore);
+        }
+
+        if(shopData.containsKey("sellPrice") && shopData.get("sellPrice") != null){
+
+            List<String> lore = meta.getLore() == null ? new ArrayList<>() : meta.getLore();
+            lore.add(ChatColor.GRAY+"Sell Price: $" +ChatColor.GREEN+ shopData.get("sellPrice"));
+            meta.setLore(lore);
+        }
+
+        if(itemData.containsKey("glow") && Boolean.parseBoolean(itemData.get("glow").toString())){
+            meta.addEnchant(new Glow(70), 1, true);
+        }
+
+        JSONObject enchants = (JSONObject) itemData.get("enchantments");
+
+        if(enchants != null && enchants.size() > 0){
+
+            for (Map.Entry<String, Object> o : ((Map<String, Object>)enchants).entrySet()) {
+                meta.addEnchant(Enchantments.getByName(o.getKey()), Integer.parseInt(o.getValue().toString()), true);
+            }
+
+        }
+
+        item.setItemMeta(meta);
+
+        Map<String, Object> nbts = (Map<String, Object>) itemData.get("NBTData");
+
+        if(nbts != null && nbts.size() > 0){
+
+            for (Map.Entry<String, Object> o : nbts.entrySet()) {
+                item = setNBT(item, o.getKey(), o.getValue().toString());
+            }
+
+        }
+
+        return item;
+
+
+    }
+
+    /**
      * This creates a new itemstack from the json file that is specified. It will create the:
      * material, display name, buy price, sell price, lore, glow, enchantments, and nbt data
      * @param shopDir the directory for the json file
