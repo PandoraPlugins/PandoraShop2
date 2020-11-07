@@ -29,7 +29,6 @@ public class InventoryUtils {
     public static Inventory createInventoryShop(String shopPath, int page, Player player) throws IOException, ParseException {
 
         shopPath = ShopPath.shopPath(shopPath, plugin);
-        System.out.println("shopPath = " + shopPath);
         JsonUtils json = new JsonUtils(shopPath);
 
         String invPath = "page"+page;
