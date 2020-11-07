@@ -18,6 +18,42 @@ public class InventoryUtils {
     private static final PandoraShop2 plugin = PandoraShop2.getPlugin(PandoraShop2.class);
 
     /**
+     * Creates a new inventory to actually purchase items
+     * @param shopPath the path to the purchaseinventory
+     * @param page the page number of the previous inventory
+     * @param itemPurchased - the position in the previous item that was purchased
+     * @param player - the player viewing
+     * @return a new inventory
+     * @throws IOException
+     * @throws ParseException
+     */
+    public static Inventory createPurchaseInventory(String shopPath, String previousShopPath, int page, int itemPurchased, Player player) throws IOException, ParseException {
+
+        shopPath = ShopPath.shopPath(shopPath, plugin);
+        JsonUtils jsonPurchase = new JsonUtils(shopPath);//purchaseInventory json
+        JsonUtils jsonClicked = new JsonUtils(previousShopPath);
+
+        final Map<String, Object> purchasedItemData = ShopPath.getConfigSectionValue(
+                jsonClicked.getData("page" + page + ".items." + itemPurchased), true);
+        final Map<String, Object> purchaseInvData = ShopPath.getConfigSectionValue(jsonPurchase.getData("page1.items"), true);
+
+        Inventory inventory = Bukkit.createInventory(player, Integer.parseInt(jsonPurchase.getData("page1.size").toString()),
+                ChatColor.translateAlternateColorCodes('&', jsonPurchase.getData("inventoryName").toString()));
+
+        for (Map.Entry<String, Object> posItemEntry : purchaseInvData.entrySet()) {
+
+            ItemStack item = null;
+            if(posItemEntry.getValue().toString().equalsIgnoreCase("boughtItem")){
+                item = Items.createShopItem()
+            }else
+                item = Items.createShopItem(previousShopPath, posItemEntry.getKey(), page);
+
+        }
+
+    }
+
+
+    /**
      * Creates a new inventory based on the parameters given
      * @param shopPath the path for the json file containing the shop information
      * @param page the page of the shop

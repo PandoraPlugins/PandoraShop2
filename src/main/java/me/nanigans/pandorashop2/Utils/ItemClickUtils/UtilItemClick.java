@@ -1,10 +1,13 @@
 package me.nanigans.pandorashop2.Utils.ItemClickUtils;
 
 import me.nanigans.pandorashop2.Events.ShopClickEvents;
+import me.nanigans.pandorashop2.PandoraShop2;
+import me.nanigans.pandorashop2.Utils.Config.ConfigCreators;
 import me.nanigans.pandorashop2.Utils.Items.InventoryUtils;
 import org.bukkit.inventory.Inventory;
 import org.json.simple.parser.ParseException;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -32,6 +35,35 @@ public class UtilItemClick {
 
    }
 
+
+   public void buyPrice(Map<String, Object> buyPriceMap){
+       if(buyPriceMap.containsKey("sellPrice") && buyPriceMap.get("sellPrice") != null)
+           purchaseItem(Integer.parseInt(buyPriceMap.get("sellPrice").toString()));
+   }
+   public void sellPrice(Map<String, Object> sellPriceMap){
+       if(sellPriceMap.containsKey("sellPrice") && sellPriceMap.get("sellPrice") != null)
+       purchaseItem(Integer.parseInt(sellPriceMap.get("sellPrice").toString()));
+   }
+
+   public void purchaseItem(int price){
+
+       try {
+           File purchase = ConfigCreators.createFile(this.shopInfo.getShopNameDir() + "/PurchaseInventory.json");
+           purchase = ConfigCreators.createDefaultJsonData(purchase, PandoraShop2.getPlugin(PandoraShop2.class));
+
+           Inventory inv = InventoryUtils.createInventoryShop(purchase.getPath(), 1, this.shopInfo.getPlayer());
+           if(inv != null) {
+               this.shopInfo.getPlayer().openInventory(inv);
+               this.shopInfo.setInv(inv);
+               this.shopInfo.setPage(1);
+               this.shopInfo.setCurrentShopPath(purchase.getPath());
+           }
+
+       }catch(IOException | ParseException e){
+           e.printStackTrace();
+       }
+
+   }
 
     /**
      * Sends the player a page forward in the shop if that page exists
@@ -66,7 +98,6 @@ public class UtilItemClick {
 
        if(forwardMap.containsKey("pageForward") && forwardMap.get("pageForward") != null &&
                forwardMap.get("pageForward").toString().equals("true")){
-
 
            Inventory inv = InventoryUtils.createInventoryShop(this.shopInfo.getCurrentShopPath(), this.shopInfo.getPage()+1, this.shopInfo.getPlayer());
            if(inv != null){
