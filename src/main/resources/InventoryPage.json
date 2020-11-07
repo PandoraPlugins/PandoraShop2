@@ -26,6 +26,8 @@
           "sellButton": false,
           "buyPrice": 20,
           "sellPrice": 20,
+          "pageForward": true,
+          "pageBackwards": false,
           "addEnchantment": {
             "enabled": true,
             "enchantment": "SHARPNESS"

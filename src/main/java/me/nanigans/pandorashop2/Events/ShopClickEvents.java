@@ -4,6 +4,7 @@ import me.nanigans.pandorashop2.PandoraShop2;
 import me.nanigans.pandorashop2.Utils.ItemClickUtils.UtilItemClick;
 import me.nanigans.pandorashop2.Utils.Items.Items;
 import me.nanigans.pandorashop2.Utils.PathUtils.ShopPath;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -41,20 +42,23 @@ public class ShopClickEvents implements Listener {
     @EventHandler
     public void inventoryClick(InventoryClickEvent event) throws IOException, ParseException {
 
-        if(event.getClickedInventory().equals(this.inv) && event.getWhoClicked().getUniqueId().equals(this.player.getUniqueId())){
+        if(event.getClickedInventory() != null) {
+            if (event.getClickedInventory().equals(this.inv) && event.getWhoClicked().getUniqueId().equals(this.player.getUniqueId())) {
 
-            ItemStack clicked = event.getCurrentItem();
+                ItemStack clicked = event.getCurrentItem();
 
-            if(clicked != null){
+                player.playSound(player.getLocation(), Sound.valueOf("CLICK"), 2f, 1f);
+                if (clicked != null) {
 
-                Map<String, Object> item = Items.getJsonItem(event.getSlot(), this.page, this.currentShopPath);
-                if(item != null)
-                new UtilItemClick(item, this);
+                    Map<String, Object> item = Items.getJsonItem(event.getSlot(), this.page, this.currentShopPath);
+                    if (item != null)
+                        new UtilItemClick(item, this);
+
+                }
+
+                event.setCancelled(true);
 
             }
-
-            event.setCancelled(true);
-
         }
 
     }
