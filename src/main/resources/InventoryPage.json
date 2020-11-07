@@ -6,7 +6,7 @@
     "items": {
 
       "0": {
-        "material": "AIR",
+        "material": "STONE",
         "displayName": "Example_Item",
         "amount": 1,
         "lore": [],

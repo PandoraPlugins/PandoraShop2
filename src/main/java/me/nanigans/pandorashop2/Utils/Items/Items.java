@@ -124,7 +124,7 @@ public class Items {
         ItemMeta meta = item.getItemMeta();
 
         if(json.getData(itemPath+".displayName") != null)
-        meta.setDisplayName(json.getData(itemPath+".displayName").toString());
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', json.getData(itemPath+".displayName").toString()));
 
         JSONArray arr = ((JSONArray) json.getData(itemPath + ".lore"));
         if(arr.size() != 0) {

@@ -21,13 +21,12 @@ public class UtilItemClick {
 
    public UtilItemClick(Map<String, Object> jsonItem, ShopClickEvents shopInfo) {
 
-       Map<String, Object> shopData = (Map<String, Object>) jsonItem.get("shopData");
        this.shopInfo = shopInfo;
 
-       for (Map.Entry<String, Object> method : shopData.entrySet()) {
+       for (Map.Entry<String, Object> method : ((Map<String, Object>)jsonItem.get("shopData")).entrySet()) {
 
            try {
-               this.getClass().getMethod(method.getKey(), Map.class).invoke(this, shopData);
+               this.getClass().getMethod(method.getKey(), Map.class).invoke(this, jsonItem);
            }catch(NoSuchMethodException | InvocationTargetException | IllegalAccessException ignored){
            }
 
@@ -35,13 +34,13 @@ public class UtilItemClick {
 
    }
 
-
    public void buyPrice(Map<String, Object> buyPriceMap){
-       if(buyPriceMap.containsKey("sellPrice") && buyPriceMap.get("sellPrice") != null)
+
+       if(((Map<String, Object>)buyPriceMap.get("shopData")).containsKey("buyPrice") && ((Map<String, Object>)buyPriceMap.get("shopData")).get("buyPrice") != null)
            purchaseItem(buyPriceMap);
    }
    public void sellPrice(Map<String, Object> sellPriceMap){
-       if(sellPriceMap.containsKey("sellPrice") && sellPriceMap.get("sellPrice") != null)
+       if(((Map<String, Object>)sellPriceMap.get("shopData")).containsKey("sellPrice") && ((Map<String, Object>)sellPriceMap.get("shopData")).get("sellPrice") != null)
        purchaseItem(sellPriceMap);
    }
 
@@ -74,6 +73,7 @@ public class UtilItemClick {
      */
     public void pageBackwards(Map<String, Object> backwardMap) throws IOException, ParseException {
 
+        backwardMap = (Map<String, Object>) backwardMap.get("shopData");
         if(backwardMap.containsKey("pageBackwards") && backwardMap.get("pageBackwards") != null &&
                 backwardMap.get("pageBackwards").toString().equals("true")){
 
@@ -96,7 +96,7 @@ public class UtilItemClick {
      * @throws ParseException ParseException
      */
    public void pageForward(Map<String, Object> forwardMap) throws IOException, ParseException {
-
+        forwardMap = (Map<String, Object>) forwardMap.get("shopData");
        if(forwardMap.containsKey("pageForward") && forwardMap.get("pageForward") != null &&
                forwardMap.get("pageForward").toString().equals("true")){
 
@@ -119,6 +119,7 @@ public class UtilItemClick {
      */
    public void goTo(Map<String, Object> goToMap) throws IOException, ParseException {
 
+       goToMap = (Map<String, Object>) goToMap.get("shopData");;
        if(goToMap.containsKey("goTo") && goToMap.get("goTo") != null){
 
            String dir = this.shopInfo.getShopNameDir()+"/"+goToMap.get("goTo");

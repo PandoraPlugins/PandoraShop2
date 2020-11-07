@@ -24,14 +24,14 @@ public class InventoryUtils {
      * @param itemPurchased - the position in the previous item that was purchased
      * @param player - the player viewing
      * @return a new inventory
-     * @throws IOException
-     * @throws ParseException
+     * @throws IOException a
+     * @throws ParseException a
      */
     public static Inventory createPurchaseInventory(String shopPath, String previousShopPath, int page, Map<String, Object> itemPurchased, Player player) throws IOException, ParseException {
 
         shopPath = ShopPath.shopPath(shopPath, plugin);
         JsonUtils jsonPurchase = new JsonUtils(shopPath);//purchaseInventory json
-        JsonUtils jsonClicked = new JsonUtils(previousShopPath);
+        JsonUtils jsonClicked = new JsonUtils(previousShopPath); // item clicked inv
 
         final Map<String, Object> purchaseInvData = ShopPath.getConfigSectionValue(jsonPurchase.getData("page1.items"), true);
 
@@ -39,9 +39,11 @@ public class InventoryUtils {
                 ChatColor.translateAlternateColorCodes('&', jsonPurchase.getData("inventoryName").toString()));
 
         ItemStack itemBought = Items.createShopItem(itemPurchased);
+
         for (Map.Entry<String, Object> posItemEntry : purchaseInvData.entrySet()) {
 
             ItemStack item;
+
             if(posItemEntry.getValue().toString().equalsIgnoreCase("boughtItem")){
                 item = itemBought;
             }else
