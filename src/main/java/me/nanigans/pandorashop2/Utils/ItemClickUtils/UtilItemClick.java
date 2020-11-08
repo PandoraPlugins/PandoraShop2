@@ -4,6 +4,7 @@ import me.nanigans.pandorashop2.Events.ShopClickEvents;
 import me.nanigans.pandorashop2.PandoraShop2;
 import me.nanigans.pandorashop2.Utils.Config.ConfigCreators;
 import me.nanigans.pandorashop2.Utils.Items.InventoryUtils;
+import me.nanigans.pandorashop2.Utils.Items.Items;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.json.simple.parser.ParseException;
@@ -11,6 +12,7 @@ import org.json.simple.parser.ParseException;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +45,17 @@ public class UtilItemClick {
 
    }
 
+
+   public UtilItemClick(Map<String, Object> jsonItem, ShopClickEvents shopInfo, Method method){
+
+       this.shopInfo = shopInfo;
+       try {
+           method.invoke(this, jsonItem);
+       }catch(InvocationTargetException | IllegalAccessException ignored){}
+
+
+   }
+
    public void extraItems(Map<String, Object> itemClicked) throws IOException, ParseException {
 
        if(((Map<String, Object>)itemClicked.get("shopData")).containsKey("extraItems") &&
@@ -51,9 +64,12 @@ public class UtilItemClick {
            ItemStack beingSold = InventoryUtils.getBuyingItem(this.shopInfo.getShopNameDir(), this.shopInfo.getInv(), this.shopInfo.getPage());
            Inventory inv = InventoryUtils.createExtraItemsInventory(this.shopInfo.getPlayer(), itemClicked, beingSold);
 
-           System.out.println("inv = " + inv);
-           if(inv != null)
+           if(inv != null) {
                this.shopInfo.getPlayer().openInventory(inv);
+               this.shopInfo.setCurrentShopPath(this.shopInfo.getCurrentShopPath()+"_");
+               this.shopInfo.setInv(inv);
+               this.shopInfo.setPage(1);
+           }
 
        }
 
@@ -77,6 +93,8 @@ public class UtilItemClick {
                 final int amount = item.getAmount() - incAmt;
 
                 item.setAmount(Math.max(1, amount));
+                Items.updatePriceLore(item, item.getAmount());
+
             }
         }
     }
@@ -93,13 +111,20 @@ public class UtilItemClick {
        if(((Map<String, Object>)itemClicked.get("shopData")).containsKey("increasePurchaseItem") &&
                Boolean.parseBoolean(((Map<String, Object>)itemClicked.get("shopData")).get("increasePurchaseItem").toString())) {
 
+           try {
                ItemStack item = InventoryUtils.getBuyingItem(this.shopInfo.getShopNameDir(), this.shopInfo.getInv(), this.shopInfo.getPage());
+
                if (item != null) {
                    int incAmt = Integer.parseInt(itemClicked.get("amount").toString());
                    final int amount = item.getAmount() + incAmt;
 
                    item.setAmount(Math.min(amount, 64));
+                   Items.updatePriceLore(item, item.getAmount());
+
                }
+           }catch(Exception e){
+               e.printStackTrace();
+           }
        }
    }
 

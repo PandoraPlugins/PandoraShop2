@@ -18,6 +18,8 @@ import org.json.simple.parser.ParseException;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Items {
@@ -27,6 +29,78 @@ public class Items {
         JsonUtils json = new JsonUtils(path);
         return ShopPath.getConfigSectionValue(json.getData("page"+page+".items."+itemLoc), true);
 
+    }
+
+
+    public static ItemStack updatePriceLore(ItemStack item, int itemAmt){
+
+        List<Double> unitPrice = getUnitPrice(item);
+        ItemMeta meta = Items.stripPriceLore(item.clone()).getItemMeta();
+
+        assert unitPrice != null;
+        if(unitPrice.get(0) != null){
+
+            double price = unitPrice.get(0);
+            List<String> lore = meta.getLore() == null ? new ArrayList<>() : meta.getLore();
+            lore.add(ChatColor.GRAY+"Buy Price: $" +ChatColor.RED+ (price*itemAmt));
+            meta.setLore(lore);
+        }
+
+        if(unitPrice.get(1) != null){
+            List<String> lore = meta.getLore() == null ? new ArrayList<>() : meta.getLore();
+            lore.add(ChatColor.GRAY+"Sell Price: $" +ChatColor.GREEN+ (unitPrice.get(1)*itemAmt));
+            meta.setLore(lore);
+        }
+
+        item.setItemMeta(meta);
+
+        return item;
+
+    }
+
+
+
+    public static List<Double> getUnitPrice(ItemStack item){
+
+        ItemMeta meta = item.getItemMeta();
+        if(meta != null && meta.getLore() != null){
+
+            List<String> lore = meta.getLore();
+            if(lore.stream().anyMatch(i -> i.contains("Buy Price: $") || i.contains("Sell Price: $"))){
+
+                List<String> collect = Arrays.asList(lore.stream().filter(i -> i.contains("Buy Price: $")).findAny().orElse(null), lore.stream().filter(i -> i.contains("Sell Price: $")).findAny().orElse(null));
+
+                for (int i = 0; i < collect.size(); i++) {
+
+                    if (collect.get(i) != null) {
+
+                        final Matcher doubles = Pattern.compile("[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?").matcher(ChatColor.stripColor(collect.get(i)));
+                        if (doubles.find())
+                            collect.set(i, doubles.group(0));
+                    }
+
+                }
+
+                List<Double> priceList = Arrays.asList(null, null);
+
+                int p = 0;
+                for (String s : collect) {
+                    if (s != null) {
+                        double i = Double.parseDouble(s);
+
+                        priceList.set(p, i);
+                    }
+                    p++;
+
+                }
+
+                return priceList;
+
+            }
+
+        }
+
+        return null;
     }
 
     /**

@@ -51,10 +51,18 @@ public class ShopClickEvents implements Listener {
                 player.playSound(player.getLocation(), Sound.valueOf("CLICK"), 2f, 1f);
                 if (clicked != null) {
 
-                    Map<String, Object> item = Items.getJsonItem(event.getSlot(), this.page, this.currentShopPath);
-                    if (item != null)
-                        new UtilItemClick(item, this);
+                    if (!this.shopNameDir.endsWith("_")) {
+                        Map<String, Object> item = Items.getJsonItem(event.getSlot(), this.page, this.currentShopPath);
+                        if (item != null)
+                            new UtilItemClick(item, this);
 
+                    }else{
+                        Map<String, Object> item = Items.getJsonItem(event.getSlot(), this.page,
+                                this.currentShopPath.substring(0, this.currentShopPath.length()-1));
+                        item.replace("amount", 64*clicked.getAmount());
+                        //new UtilItemClick(item, this, UtilItemClick.class.getMethod("purchaseButton"))
+
+                    }
                 }
 
                 event.setCancelled(true);

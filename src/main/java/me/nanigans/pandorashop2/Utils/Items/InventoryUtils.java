@@ -40,7 +40,10 @@ public class InventoryUtils {
                 for (Map.Entry<String, Object> itemPositions : itemPos.entrySet()) {
 
                     ItemStack clone = item.clone();
+                    clone = Items.stripPriceLore(clone);
                     clone.setAmount(Integer.parseInt(itemPositions.getKey()));
+
+
                     inventory.setItem(Integer.parseInt(itemPositions.getValue().toString()), clone);
                 }
 
@@ -75,6 +78,31 @@ public class InventoryUtils {
 
         }
         return null;
+    }
+
+    /**
+     * Gets the item being bought's json data
+     * @param purchaseInvPath the path to the purchase inventory
+     * @param page the page the player is on
+     * @return the json data for the item
+     * @throws IOException error
+     * @throws ParseException error
+     */
+
+    public static Map<String, Object> getBuyingItemData(String purchaseInvPath, int page) throws IOException, ParseException {
+
+        JsonUtils json = new JsonUtils(purchaseInvPath+"/PurchaseInventory.json");
+        Map<String, Object> itemData = (Map<String, Object>) json.getData("page"+page+".items");
+
+        for (Map.Entry<String, Object> stringObjectEntry : itemData.entrySet()) {
+
+            if(stringObjectEntry.getValue().toString().equalsIgnoreCase("boughtItem")){
+                return ((Map<String, Object>) itemData.get(stringObjectEntry.getKey()));
+            }
+
+        }
+        return null;
+
     }
 
     /**
