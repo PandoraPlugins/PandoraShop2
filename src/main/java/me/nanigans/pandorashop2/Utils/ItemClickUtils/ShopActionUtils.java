@@ -13,6 +13,14 @@ import java.util.Map;
 
 public class ShopActionUtils {
 
+    
+
+
+    /**
+     * Buys the item in question
+     * @param shopInfo shopinfo for the current player
+     * @param bought what item was bought
+     */
     public static void buy(ShopClickEvents shopInfo, ItemStack bought){
 
         int amountPurchased = bought.getAmount();

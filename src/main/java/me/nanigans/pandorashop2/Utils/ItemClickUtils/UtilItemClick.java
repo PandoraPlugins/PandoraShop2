@@ -20,6 +20,11 @@ public class UtilItemClick {
     private static final List<String> utilList = Arrays.asList("goTo", "purchaseButton", "sellButton", "pageForward", "pageBackwards");
     private ShopClickEvents shopInfo;
 
+    /**
+     * This will find the method that an item clicked has according to its json shopData
+     * @param jsonItem the item clicked
+     * @param shopInfo shop info for th eplayer
+     */
    public UtilItemClick(Map<String, Object> jsonItem, ShopClickEvents shopInfo) {
 
        this.shopInfo = shopInfo;
@@ -35,6 +40,13 @@ public class UtilItemClick {
 
    }
 
+
+    /**
+     * This will make the player buy the item being bought
+     * @param purchasedItem the item clicked in the inventory
+     * @throws IOException IOException
+     * @throws ParseException ParseException
+     */
    public void purchaseButton(Map<String, Object> purchasedItem) throws IOException, ParseException {
 
        Inventory inv = this.shopInfo.getInv();
@@ -48,11 +60,20 @@ public class UtilItemClick {
 
    }
 
+    /**
+     * Directs to purchaseItem
+     * @param buyPriceMap json item clicked
+     */
    public void buyPrice(Map<String, Object> buyPriceMap){
 
        if(((Map<String, Object>)buyPriceMap.get("shopData")).containsKey("buyPrice") && ((Map<String, Object>)buyPriceMap.get("shopData")).get("buyPrice") != null)
            purchaseItem(buyPriceMap);
    }
+
+    /**
+     * Directs to purchaseItem
+     * @param sellPriceMap json item clicked
+     */
    public void sellPrice(Map<String, Object> sellPriceMap){
        if(((Map<String, Object>)sellPriceMap.get("shopData")).containsKey("sellPrice") && ((Map<String, Object>)sellPriceMap.get("shopData")).get("sellPrice") != null)
        purchaseItem(sellPriceMap);
