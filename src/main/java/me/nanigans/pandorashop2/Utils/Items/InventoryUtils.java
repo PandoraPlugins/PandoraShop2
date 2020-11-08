@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 public class InventoryUtils {
@@ -107,6 +108,13 @@ public class InventoryUtils {
 
 
         return inventory;
+
+    }
+
+    public static int getAmountInInv(ItemStack item, Inventory inv){
+
+        final HashMap<Integer, ? extends ItemStack> all = inv.all(item);
+        return all.values().stream().map(i -> i.getAmount()).reduce(0, Integer::sum);
 
     }
 

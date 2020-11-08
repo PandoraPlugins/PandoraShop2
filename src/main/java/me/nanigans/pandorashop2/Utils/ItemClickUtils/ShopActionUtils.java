@@ -5,6 +5,7 @@ import com.earth2me.essentials.User;
 import me.nanigans.pandorashop2.Events.ShopClickEvents;
 import me.nanigans.pandorashop2.Utils.Items.InventoryUtils;
 import me.nanigans.pandorashop2.Utils.Items.Items;
+import net.ess3.api.MaxMoneyException;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 
@@ -13,7 +14,27 @@ import java.util.Map;
 
 public class ShopActionUtils {
 
-    
+    public static void sell(ShopClickEvents shopInfo, ItemStack sold){
+
+        int amountSold = sold.getAmount();
+        Map<String, Object> jsonItem = shopInfo.getItemInPurchase();
+        int price = Integer.parseInt(((Map<String, Object>) jsonItem.get("shopData")).get("sellPrice").toString());
+
+        final int totalPrice = amountSold*price;
+        User user = Essentials.getPlugin(Essentials.class).getUser(shopInfo.getPlayer());
+
+        if(InventoryUtils.getAmountInInv(Items.stripPriceLore(sold), shopInfo.getPlayer().getInventory()) >= sold.getAmount()){
+
+            try {
+                shopInfo.getPlayer().getInventory().remove(Items.stripPriceLore(sold));
+                user.giveMoney(BigDecimal.valueOf(totalPrice));
+            }catch(MaxMoneyException e){
+                shopInfo.getPlayer().sendMessage(ChatColor.RED+"Cannot sell this item due to your balance being full");
+            }
+
+        }
+
+    }
 
 
     /**
