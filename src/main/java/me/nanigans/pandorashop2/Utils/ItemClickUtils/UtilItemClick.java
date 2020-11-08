@@ -34,6 +34,8 @@ public class UtilItemClick {
            try {
                this.getClass().getMethod(method.getKey(), Map.class).invoke(this, jsonItem);
            }catch(NoSuchMethodException | InvocationTargetException | IllegalAccessException ignored){
+               if(!(ignored.getCause() instanceof NoSuchMethodException) && !(ignored.getCause() instanceof InvocationTargetException))
+               ignored.printStackTrace();
            }
 
        }
@@ -48,17 +50,25 @@ public class UtilItemClick {
      */
     public void sellButton(Map<String, Object> soldItem) throws IOException, ParseException {
 
-        Inventory inv = this.shopInfo.getInv();
+        if(((Map<String, Object>)soldItem.get("shopData")).containsKey("sellButton") && ((Map<String, Object>)soldItem.get("shopData")).get("sellButton") != null) {
 
-        ItemStack sellItem = InventoryUtils.getBuyingItem(
-                this.shopInfo.getShopNameDir()+"/PurchaseInventory.json", inv, this.shopInfo.getPage());
+            Inventory inv = this.shopInfo.getInv();
 
-        if(sellItem != null) {
-            ShopActionUtils.sell(this.shopInfo, sellItem);
-            Inventory backInv = InventoryUtils.createInventoryShop(this.shopInfo.getShopNameDir()+"/Categories.json", 1, this.shopInfo.getPlayer());
-            if(backInv != null)
-                this.shopInfo.getPlayer().openInventory(backInv);
-            else this.shopInfo.getPlayer().closeInventory();
+            String purchInv = this.shopInfo.getShopNameDir();
+            ItemStack sellItem = InventoryUtils.getBuyingItem(
+                    purchInv, inv, this.shopInfo.getPage());
+
+            if (sellItem != null) {
+                ShopActionUtils.sell(this.shopInfo, sellItem);
+                Inventory backInv = InventoryUtils.createInventoryShop(this.shopInfo.getShopNameDir() + "/Categories.json", 1, this.shopInfo.getPlayer());
+                if (backInv != null) {
+                    this.shopInfo.getPlayer().openInventory(backInv);
+                    this.shopInfo.setInv(backInv);
+                    this.shopInfo.setPage(1);
+                    this.shopInfo.setCurrentShopPath(this.shopInfo.getShopNameDir()+"/Categories");
+                }
+                else this.shopInfo.getPlayer().closeInventory();
+            }
         }
 
     }
@@ -71,19 +81,28 @@ public class UtilItemClick {
      */
    public void purchaseButton(Map<String, Object> purchasedItem) throws IOException, ParseException {
 
-       Inventory inv = this.shopInfo.getInv();
+       if(((Map<String, Object>)purchasedItem.get("shopData")).containsKey("purchaseButton") && ((Map<String, Object>)purchasedItem.get("shopData")).get("purchaseButton") != null) {
 
-       ItemStack buyingItem = InventoryUtils.getBuyingItem(
-               this.shopInfo.getShopNameDir()+"/PurchaseInventory.json", inv, this.shopInfo.getPage());
+           Inventory inv = this.shopInfo.getInv();
 
-       if(buyingItem != null) {
-           ShopActionUtils.buy(this.shopInfo, buyingItem);
-           Inventory backInv = InventoryUtils.createInventoryShop(this.shopInfo.getShopNameDir()+"/Categories.json", 1, this.shopInfo.getPlayer());
-           if(backInv != null)
-           this.shopInfo.getPlayer().openInventory(backInv);
-           else this.shopInfo.getPlayer().closeInventory();
+           String purchInv = this.shopInfo.getShopNameDir();
+
+           ItemStack buyingItem = InventoryUtils.getBuyingItem(
+                   purchInv, inv, this.shopInfo.getPage());
+
+           System.out.println("buyingItem = " + buyingItem);
+           if (buyingItem != null) {
+               ShopActionUtils.buy(this.shopInfo, buyingItem);
+               Inventory backInv = InventoryUtils.createInventoryShop(this.shopInfo.getShopNameDir() + "/Categories.json", 1, this.shopInfo.getPlayer());
+               if (backInv != null) {
+                   this.shopInfo.getPlayer().openInventory(backInv);
+                   this.shopInfo.setInv(backInv);
+                   this.shopInfo.setPage(1);
+                   this.shopInfo.setCurrentShopPath(this.shopInfo.getShopNameDir()+"/Categories");
+               }
+               else this.shopInfo.getPlayer().closeInventory();
+           }
        }
-
    }
 
     /**
