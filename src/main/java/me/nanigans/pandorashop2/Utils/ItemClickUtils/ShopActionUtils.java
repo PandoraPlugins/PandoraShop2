@@ -14,6 +14,11 @@ import java.util.Map;
 
 public class ShopActionUtils {
 
+    /**
+     * Sells the item in question
+     * @param shopInfo shopinfo for the current player
+     * @param sold the itemstack being sold
+     */
     public static void sell(ShopClickEvents shopInfo, ItemStack sold){
 
         int amountSold = sold.getAmount();

@@ -11,7 +11,6 @@ import org.bukkit.inventory.ItemStack;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 public class InventoryUtils {
@@ -111,6 +110,12 @@ public class InventoryUtils {
 
     }
 
+    /**
+     * Gets an amount of an itemstack matching in an inventory
+     * @param item the item to match
+     * @param inv the inventory to match to
+     * @return the amount of items in an inventory matching an item
+     */
     public static int getAmountInInv(ItemStack item, Inventory inv){
 
         int amount = 0;
@@ -124,6 +129,11 @@ public class InventoryUtils {
 
     }
 
+    /**
+     * Copies an inventory to a new inventory
+     * @param inv the inventory to copy
+     * @return the new copied inventory
+     */
     public static Inventory copyInventory(Inventory inv){
 
         Inventory newInv = Bukkit.createInventory(inv.getHolder(), inv.getSize(), inv.getName());

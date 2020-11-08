@@ -29,6 +29,14 @@ public class Items {
 
     }
 
+    /**
+     * Strips an itemstack of:
+     * Buy Price:
+     * Sell Price:
+     * lore
+     * @param item the item to strip down
+     * @return a new itemstack without the price lore
+     */
     public static ItemStack stripPriceLore(ItemStack item){
 
         ItemMeta meta = item.getItemMeta();
@@ -37,7 +45,6 @@ public class Items {
         if(lore != null){
 
             lore = lore.stream().filter(i -> !i.contains("Buy Price:") && !i.contains("Sell Price:")).collect(Collectors.toList());
-            System.out.println("lore = " + lore);
             meta.setLore(lore);
         }
         item.setItemMeta(meta);
