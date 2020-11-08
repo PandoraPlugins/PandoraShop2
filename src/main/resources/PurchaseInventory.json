@@ -27,6 +27,9 @@
           "sellPrice": 20,
           "pageForward": true,
           "pageBackwards": false,
+          "increasePurchaseItem": true,
+          "decreasePurchaseItem": false,
+          "_comment3": "^ Will change the item by the amount of this it",
           "addEnchantment": {
             "enabled": true,
             "enchantment": "SHARPNESS"

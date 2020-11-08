@@ -17,8 +17,9 @@ import java.util.Map;
 
 public class UtilItemClick {
 
-    private static final List<String> utilList = Arrays.asList("goTo", "purchaseButton", "sellButton", "pageForward", "pageBackwards");
-    private ShopClickEvents shopInfo;
+    private static final List<String> utilList = Arrays.asList("goTo", "purchaseButton", "sellButton", "pageForward", "pageBackwards",
+            "increasePurchaseItem", "decreasePurchaseItem");
+    private final ShopClickEvents shopInfo;
 
     /**
      * This will find the method that an item clicked has according to its json shopData
@@ -40,6 +41,36 @@ public class UtilItemClick {
 
        }
 
+   }
+
+    public void decreasePurchaseItem(Map<String, Object> itemClicked) throws IOException, ParseException {
+
+        if(((Map<String, Object>)itemClicked.get("shopData")).containsKey("decreasePurchaseItem") &&
+                Boolean.parseBoolean(((Map<String, Object>)itemClicked.get("shopData")).get("decreasePurchaseItem").toString())) {
+
+            ItemStack item = InventoryUtils.getBuyingItem(this.shopInfo.getShopNameDir(), this.shopInfo.getInv(), this.shopInfo.getPage());
+            if (item != null) {
+                int incAmt = Integer.parseInt(itemClicked.get("amount").toString());
+                final int amount = item.getAmount() - incAmt;
+
+                item.setAmount(Math.max(1, amount));
+            }
+        }
+    }
+
+   public void increasePurchaseItem(Map<String, Object> itemClicked) throws IOException, ParseException {
+
+       if(((Map<String, Object>)itemClicked.get("shopData")).containsKey("increasePurchaseItem") &&
+               Boolean.parseBoolean(((Map<String, Object>)itemClicked.get("shopData")).get("increasePurchaseItem").toString())) {
+
+               ItemStack item = InventoryUtils.getBuyingItem(this.shopInfo.getShopNameDir(), this.shopInfo.getInv(), this.shopInfo.getPage());
+               if (item != null) {
+                   int incAmt = Integer.parseInt(itemClicked.get("amount").toString());
+                   final int amount = item.getAmount() + incAmt;
+
+                   item.setAmount(Math.min(amount, 64));
+               }
+       }
    }
 
     /**
@@ -92,7 +123,6 @@ public class UtilItemClick {
            ItemStack buyingItem = InventoryUtils.getBuyingItem(
                    purchInv, inv, this.shopInfo.getPage());
 
-           System.out.println("buyingItem = " + buyingItem);
            if (buyingItem != null) {
                ShopActionUtils.buy(this.shopInfo, buyingItem);
                Inventory backInv = InventoryUtils.createInventoryShop(this.shopInfo.getShopNameDir() + "/Categories.json", 1, this.shopInfo.getPlayer());
