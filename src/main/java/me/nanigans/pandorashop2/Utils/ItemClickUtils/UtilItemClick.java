@@ -5,6 +5,7 @@ import me.nanigans.pandorashop2.PandoraShop2;
 import me.nanigans.pandorashop2.Utils.Config.ConfigCreators;
 import me.nanigans.pandorashop2.Utils.Items.InventoryUtils;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.json.simple.parser.ParseException;
 
 import java.io.File;
@@ -34,6 +35,19 @@ public class UtilItemClick {
 
    }
 
+   public void purchaseButton(Map<String, Object> purchasedItem) throws IOException, ParseException {
+
+       Inventory inv = this.shopInfo.getInv();
+
+       ItemStack buyingItem = InventoryUtils.getBuyingItem(
+               this.shopInfo.getShopNameDir()+"/PurchaseInventory.json", inv, this.shopInfo.getPage());
+
+       if(buyingItem != null)
+       ShopActionUtils.buy(this.shopInfo, buyingItem);
+
+
+   }
+
    public void buyPrice(Map<String, Object> buyPriceMap){
 
        if(((Map<String, Object>)buyPriceMap.get("shopData")).containsKey("buyPrice") && ((Map<String, Object>)buyPriceMap.get("shopData")).get("buyPrice") != null)
@@ -44,6 +58,10 @@ public class UtilItemClick {
        purchaseItem(sellPriceMap);
    }
 
+    /**
+     * Opens a new purchasing inventory for the player
+     * @param boughtItem the item being bought
+     */
    public void purchaseItem(Map<String, Object> boughtItem){
 
        try {
@@ -53,6 +71,7 @@ public class UtilItemClick {
            Inventory inv = InventoryUtils.createPurchaseInventory(this.shopInfo.getShopNameDir()+"/PurchaseInventory.json",
                    this.shopInfo.getCurrentShopPath(), this.shopInfo.getPage(), boughtItem, this.shopInfo.getPlayer());
            if(inv != null) {
+               this.shopInfo.setItemInPurchase(boughtItem);
                this.shopInfo.getPlayer().openInventory(inv);
                this.shopInfo.setInv(inv);
                this.shopInfo.setPage(1);

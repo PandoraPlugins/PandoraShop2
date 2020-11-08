@@ -22,6 +22,7 @@ public class ShopClickEvents implements Listener {
     private String currentShopPath;
     private String shopNameDir;
     private int page;
+    private Map<String, Object> itemInPurchase;
     private final PandoraShop2 plugin = PandoraShop2.getPlugin(PandoraShop2.class);
 
     /**
@@ -61,6 +62,14 @@ public class ShopClickEvents implements Listener {
             }
         }
 
+    }
+
+    public void setItemInPurchase(Map<String, Object> item){
+        this.itemInPurchase = item;
+    }
+
+    public Map<String, Object> getItemInPurchase(){
+        return this.itemInPurchase;
     }
 
     public Player getPlayer(){

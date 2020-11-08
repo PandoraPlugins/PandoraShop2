@@ -18,15 +18,27 @@ import org.json.simple.parser.ParseException;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Items {
-
 
     public static Map<String, Object> getJsonItem(int itemLoc, int page, String path) throws IOException, ParseException {
 
         JsonUtils json = new JsonUtils(path);
         return ShopPath.getConfigSectionValue(json.getData("page"+page+".items."+itemLoc), true);
 
+    }
+
+    public static ItemStack stripPriceLore(ItemStack item){
+
+        ItemMeta meta = item.getItemMeta();
+        List<String> lore = meta.getLore();
+        if(lore != null){
+
+            lore = lore.stream().filter(i -> !i.contains("Buy Price: $") || !i.contains("Sell Price: $")).collect(Collectors.toList());
+            meta.setLore(lore);
+        }
+        return item;
     }
 
     /**

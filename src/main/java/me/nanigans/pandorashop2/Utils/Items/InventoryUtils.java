@@ -17,6 +17,22 @@ public class InventoryUtils {
 
     private static final PandoraShop2 plugin = PandoraShop2.getPlugin(PandoraShop2.class);
 
+
+    public static ItemStack getBuyingItem(String purchaseInvPath, Inventory inv, int page) throws IOException, ParseException {
+
+        JsonUtils json = new JsonUtils(purchaseInvPath+"/PurchaseInventory.json");
+        Map<String, Object> itemData = (Map<String, Object>) json.getData("page"+page+".items");
+
+        for (Map.Entry<String, Object> stringObjectEntry : itemData.entrySet()) {
+
+            if(stringObjectEntry.getValue().toString().equalsIgnoreCase("boughtItem")){
+                return inv.getItem(Integer.parseInt(stringObjectEntry.getKey()));
+            }
+
+        }
+        return null;
+    }
+
     /**
      * Creates a new inventory to actually purchase items
      * @param shopPath the path to the purchaseinventory
@@ -91,6 +107,16 @@ public class InventoryUtils {
 
 
         return inventory;
+
+    }
+
+    public static Inventory copyInventory(Inventory inv){
+
+        Inventory newInv = Bukkit.createInventory(inv.getHolder(), inv.getSize(), inv.getName());
+
+        newInv.setContents(inv.getContents());
+
+        return newInv;
 
     }
 
