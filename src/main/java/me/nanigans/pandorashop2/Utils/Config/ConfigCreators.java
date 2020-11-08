@@ -53,6 +53,7 @@ public class ConfigCreators {
                 createPath(path.substring(0, path.lastIndexOf("/")));
                 Files.createFile(paths);
             }
+
         }
         return file;
 

@@ -50,6 +50,7 @@ public final class PandoraShop2 extends JavaPlugin {
 
         try {
             ConfigCreators.createFile(getDataFolder() + "/Shops/Shop/Categories.json");
+            ConfigCreators.createDefaultJsonData(new File(getDataFolder() + "/Shops/Shop/Categories.json"), this);
         } catch (IOException e) {
             e.printStackTrace();
         }

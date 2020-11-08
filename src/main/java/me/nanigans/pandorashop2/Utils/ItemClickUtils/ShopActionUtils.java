@@ -26,12 +26,15 @@ public class ShopActionUtils {
         if(InventoryUtils.getAmountInInv(Items.stripPriceLore(sold), shopInfo.getPlayer().getInventory()) >= sold.getAmount()){
 
             try {
-                shopInfo.getPlayer().getInventory().remove(Items.stripPriceLore(sold));
+                shopInfo.getPlayer().getInventory().removeItem(Items.stripPriceLore(sold));
                 user.giveMoney(BigDecimal.valueOf(totalPrice));
+                user.sendMessage(ChatColor.GREEN+"Successfully sold " + sold.getAmount() + " " + sold.getItemMeta().getDisplayName()+"!");
             }catch(MaxMoneyException e){
                 shopInfo.getPlayer().sendMessage(ChatColor.RED+"Cannot sell this item due to your balance being full");
             }
 
+        }else{
+            shopInfo.getPlayer().sendMessage(ChatColor.RED+"You do not have enough items in your inventory to sell this item");
         }
 
     }

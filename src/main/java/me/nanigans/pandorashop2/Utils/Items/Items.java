@@ -33,11 +33,14 @@ public class Items {
 
         ItemMeta meta = item.getItemMeta();
         List<String> lore = meta.getLore();
+
         if(lore != null){
 
-            lore = lore.stream().filter(i -> !i.contains("Buy Price: $") || !i.contains("Sell Price: $")).collect(Collectors.toList());
+            lore = lore.stream().filter(i -> !i.contains("Buy Price:") && !i.contains("Sell Price:")).collect(Collectors.toList());
+            System.out.println("lore = " + lore);
             meta.setLore(lore);
         }
+        item.setItemMeta(meta);
         return item;
     }
 

@@ -113,8 +113,14 @@ public class InventoryUtils {
 
     public static int getAmountInInv(ItemStack item, Inventory inv){
 
-        final HashMap<Integer, ? extends ItemStack> all = inv.all(item);
-        return all.values().stream().map(i -> i.getAmount()).reduce(0, Integer::sum);
+        int amount = 0;
+        for(ItemStack currItm : inv.getContents()){
+            if(currItm != null && currItm.isSimilar(item))
+                amount++;
+
+        }
+
+        return amount;
 
     }
 

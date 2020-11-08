@@ -5,7 +5,7 @@
     "_comment": "size must be a multiple of 9 and the number of items cannot exceed the size",
     "items": {
       "0": {
-        "material": "AIR",
+        "material": "STONE",
         "displayName": "Example_Item",
         "amount": 1,
         "lore": [],

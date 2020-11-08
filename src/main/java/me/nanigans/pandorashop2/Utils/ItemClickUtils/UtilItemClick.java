@@ -34,8 +34,8 @@ public class UtilItemClick {
            try {
                this.getClass().getMethod(method.getKey(), Map.class).invoke(this, jsonItem);
            }catch(NoSuchMethodException | InvocationTargetException | IllegalAccessException ignored){
-               if(!(ignored.getCause() instanceof NoSuchMethodException) && !(ignored.getCause() instanceof InvocationTargetException))
-               ignored.printStackTrace();
+//               if(!(ignored.getCause() instanceof NoSuchMethodException) && !(ignored.getCause() instanceof InvocationTargetException))
+//               ignored.printStackTrace();
            }
 
        }
@@ -50,7 +50,8 @@ public class UtilItemClick {
      */
     public void sellButton(Map<String, Object> soldItem) throws IOException, ParseException {
 
-        if(((Map<String, Object>)soldItem.get("shopData")).containsKey("sellButton") && ((Map<String, Object>)soldItem.get("shopData")).get("sellButton") != null) {
+        if(((Map<String, Object>)soldItem.get("shopData")).containsKey("sellButton") &&
+                Boolean.parseBoolean(((Map<String, Object>)soldItem.get("shopData")).get("sellButton").toString())) {
 
             Inventory inv = this.shopInfo.getInv();
 
@@ -81,7 +82,8 @@ public class UtilItemClick {
      */
    public void purchaseButton(Map<String, Object> purchasedItem) throws IOException, ParseException {
 
-       if(((Map<String, Object>)purchasedItem.get("shopData")).containsKey("purchaseButton") && ((Map<String, Object>)purchasedItem.get("shopData")).get("purchaseButton") != null) {
+       if(((Map<String, Object>)purchasedItem.get("shopData")).containsKey("purchaseButton") &&
+               Boolean.parseBoolean(((Map<String, Object>)purchasedItem.get("shopData")).get("purchaseButton").toString())) {
 
            Inventory inv = this.shopInfo.getInv();
 
