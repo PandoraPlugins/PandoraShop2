@@ -18,6 +18,50 @@ public class InventoryUtils {
     private static final PandoraShop2 plugin = PandoraShop2.getPlugin(PandoraShop2.class);
 
 
+    /**
+     * Creates an extra item purchase inventory
+     * @param player the player that wants to purchase more items
+     * @param itemData the item data for the item clicked
+     * @param item the item being sold
+     * @return a new inventory with extra items to buy
+     */
+    public static Inventory createExtraItemsInventory(Player player, Map<String, Object> itemData, ItemStack item) {
+
+        Map<String, Object> shopData = (Map<String, Object>) itemData.get("shopData");
+        Map<String, Object> extraItems = ((Map<String, Object>) shopData.get("extraItems"));
+
+        if(extraItems != null) {
+            Inventory inventory = Bukkit.createInventory(player, Integer.parseInt(extraItems.get("invSize").toString()),
+                    ChatColor.translateAlternateColorCodes('&', extraItems.get("invName").toString()));
+
+            Map<String, Object> itemPos = ((Map<String, Object>) extraItems.get("itemPositions"));
+
+            if(itemPos != null && itemPos.size() > 0) {
+                for (Map.Entry<String, Object> itemPositions : itemPos.entrySet()) {
+
+                    ItemStack clone = item.clone();
+                    clone.setAmount(Integer.parseInt(itemPositions.getKey()));
+                    inventory.setItem(Integer.parseInt(itemPositions.getValue().toString()), clone);
+                }
+
+                return inventory;
+            }
+        }
+
+        return null;
+
+    }
+
+
+    /**
+     * Gets the item being bought in purchaseinventory when the player is looking at it
+     * @param purchaseInvPath The path to the purchase inventory
+     * @param inv the inventory currently looked at
+     * @param page the page of the inventory
+     * @return a new ItemStack of the item being bought
+     * @throws IOException
+     * @throws ParseException
+     */
     public static ItemStack getBuyingItem(String purchaseInvPath, Inventory inv, int page) throws IOException, ParseException {
 
         JsonUtils json = new JsonUtils(purchaseInvPath+"/PurchaseInventory.json");

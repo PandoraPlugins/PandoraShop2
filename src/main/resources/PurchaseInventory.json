@@ -29,6 +29,18 @@
           "pageBackwards": false,
           "increasePurchaseItem": true,
           "decreasePurchaseItem": false,
+          "extraItems": {
+            "invSize": 27,
+            "invName": "Buy Extra Items",
+            "itemPositions": {
+              "1": 11,
+              "2": 12,
+              "3": 13,
+              "4": 14,
+              "5": 15
+            },
+            "_comment": "^ \"numStacks\": InventoryPosition"
+          },
           "_comment3": "^ Will change the item by the amount of this it",
           "addEnchantment": {
             "enabled": true,

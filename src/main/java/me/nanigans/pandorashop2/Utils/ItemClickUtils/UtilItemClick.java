@@ -18,7 +18,7 @@ import java.util.Map;
 public class UtilItemClick {
 
     private static final List<String> utilList = Arrays.asList("goTo", "purchaseButton", "sellButton", "pageForward", "pageBackwards",
-            "increasePurchaseItem", "decreasePurchaseItem");
+            "increasePurchaseItem", "decreasePurchaseItem", "extraItems");
     private final ShopClickEvents shopInfo;
 
     /**
@@ -42,6 +42,24 @@ public class UtilItemClick {
        }
 
    }
+
+   public void extraItems(Map<String, Object> itemClicked) throws IOException, ParseException {
+
+       if(((Map<String, Object>)itemClicked.get("shopData")).containsKey("extraItems") &&
+               ((Map<String, Object>)itemClicked.get("shopData")).get("extraItems") != null){
+
+           ItemStack beingSold = InventoryUtils.getBuyingItem(this.shopInfo.getShopNameDir(), this.shopInfo.getInv(), this.shopInfo.getPage());
+           Inventory inv = InventoryUtils.createExtraItemsInventory(this.shopInfo.getPlayer(), itemClicked, beingSold);
+
+           System.out.println("inv = " + inv);
+           if(inv != null)
+               this.shopInfo.getPlayer().openInventory(inv);
+
+       }
+
+
+   }
+
     /**
      * Decreases the item in question by the item clicked amount
      * @param itemClicked the item the signifies to decrease the item
