@@ -42,7 +42,12 @@ public class UtilItemClick {
        }
 
    }
-
+    /**
+     * Decreases the item in question by the item clicked amount
+     * @param itemClicked the item the signifies to decrease the item
+     * @throws IOException
+     * @throws ParseException
+     */
     public void decreasePurchaseItem(Map<String, Object> itemClicked) throws IOException, ParseException {
 
         if(((Map<String, Object>)itemClicked.get("shopData")).containsKey("decreasePurchaseItem") &&
@@ -57,6 +62,13 @@ public class UtilItemClick {
             }
         }
     }
+
+    /**
+     * Increases the item in question by the item clicked amount
+     * @param itemClicked the item the signifies to increase the item
+     * @throws IOException
+     * @throws ParseException
+     */
 
    public void increasePurchaseItem(Map<String, Object> itemClicked) throws IOException, ParseException {
 
