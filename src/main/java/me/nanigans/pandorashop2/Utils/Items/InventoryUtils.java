@@ -17,7 +17,6 @@ public class InventoryUtils {
 
     private static final PandoraShop2 plugin = PandoraShop2.getPlugin(PandoraShop2.class);
 
-
     /**
      * Creates an extra item purchase inventory
      * @param player the player that wants to purchase more items
@@ -192,7 +191,7 @@ public class InventoryUtils {
         int amount = 0;
         for(ItemStack currItm : inv.getContents()){
             if(currItm != null && currItm.isSimilar(item))
-                amount++;
+                amount+=currItm.getAmount();
 
         }
 

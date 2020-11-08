@@ -5,6 +5,7 @@ import me.nanigans.pandorashop2.PandoraShop2;
 import me.nanigans.pandorashop2.Utils.Config.ConfigCreators;
 import me.nanigans.pandorashop2.Utils.Items.InventoryUtils;
 import me.nanigans.pandorashop2.Utils.Items.Items;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.json.simple.parser.ParseException;
@@ -22,6 +23,10 @@ public class UtilItemClick {
     private static final List<String> utilList = Arrays.asList("goTo", "purchaseButton", "sellButton", "pageForward", "pageBackwards",
             "increasePurchaseItem", "decreasePurchaseItem", "extraItems");
     private final ShopClickEvents shopInfo;
+
+    public UtilItemClick(ShopClickEvents shopInfo){
+        this.shopInfo = shopInfo;
+    }
 
     /**
      * This will find the method that an item clicked has according to its json shopData
@@ -42,22 +47,6 @@ public class UtilItemClick {
            }
 
        }
-
-   }
-
-    /**
-     * This will call a method directly
-     * @param jsonItem the item clicked
-     * @param shopInfo the shop info for the player
-     * @param method the method to call
-     */
-   public UtilItemClick(Map<String, Object> jsonItem, ShopClickEvents shopInfo, Method method){
-
-       this.shopInfo = shopInfo;
-       try {
-           method.invoke(this, jsonItem);
-       }catch(InvocationTargetException | IllegalAccessException ignored){}
-
 
    }
 
@@ -195,6 +184,31 @@ public class UtilItemClick {
                else this.shopInfo.getPlayer().closeInventory();
            }
        }
+   }
+
+    /**
+     * Directly buys or sells an item
+     * @param buyingItem the item being bought
+     * @param buyOrSell true for buy, false for sell
+     * @throws IOException error
+     * @throws ParseException error
+     */
+   public void purchaseStack(ItemStack buyingItem, boolean buyOrSell) throws IOException, ParseException {
+
+       if (buyingItem != null) {
+           if(buyOrSell)
+           ShopActionUtils.buy(this.shopInfo, buyingItem);
+           else ShopActionUtils.sell(this.shopInfo, buyingItem);
+           Inventory backInv = InventoryUtils.createInventoryShop(this.shopInfo.getShopNameDir() + "/Categories.json", 1, this.shopInfo.getPlayer());
+           if (backInv != null) {
+               this.shopInfo.getPlayer().openInventory(backInv);
+               this.shopInfo.setInv(backInv);
+               this.shopInfo.setPage(1);
+               this.shopInfo.setCurrentShopPath(this.shopInfo.getShopNameDir()+"/Categories");
+           }
+           else this.shopInfo.getPlayer().closeInventory();
+       }
+
    }
 
     /**

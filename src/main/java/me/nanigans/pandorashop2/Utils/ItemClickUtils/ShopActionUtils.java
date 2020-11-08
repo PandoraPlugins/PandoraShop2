@@ -7,6 +7,7 @@ import me.nanigans.pandorashop2.Utils.Items.InventoryUtils;
 import me.nanigans.pandorashop2.Utils.Items.Items;
 import net.ess3.api.MaxMoneyException;
 import org.bukkit.ChatColor;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 import java.math.BigDecimal;
@@ -21,16 +22,20 @@ public class ShopActionUtils {
      */
     public static void sell(ShopClickEvents shopInfo, ItemStack sold){
 
-        int amountSold = sold.getAmount();
+        int amtInInv = InventoryUtils.getAmountInInv(Items.stripPriceLore(sold.clone()), shopInfo.getPlayer().getInventory());
+
+        int amountSold = shopInfo.getClickType().equals(ClickType.MIDDLE) ? amtInInv : sold.getAmount();
+        sold.setAmount(amountSold);
+
         Map<String, Object> jsonItem = shopInfo.getItemInPurchase();
         int price = Integer.parseInt(((Map<String, Object>) jsonItem.get("shopData")).get("sellPrice").toString());
 
         final int totalPrice = amountSold*price;
         User user = Essentials.getPlugin(Essentials.class).getUser(shopInfo.getPlayer());
 
-        if(InventoryUtils.getAmountInInv(Items.stripPriceLore(sold), shopInfo.getPlayer().getInventory()) >= sold.getAmount()){
-
+        if(amtInInv >= sold.getAmount()){
             try {
+
                 shopInfo.getPlayer().getInventory().removeItem(Items.stripPriceLore(sold));
                 user.giveMoney(BigDecimal.valueOf(totalPrice));
                 user.sendMessage(ChatColor.GREEN+"Successfully sold " + sold.getAmount() + " " + sold.getItemMeta().getDisplayName()+"!");
@@ -56,13 +61,14 @@ public class ShopActionUtils {
         Map<String, Object> jsonItem = shopInfo.getItemInPurchase();
         int price = Integer.parseInt(((Map<String, Object>) jsonItem.get("shopData")).get("buyPrice").toString());
 
-        final int totalPrice = amountPurchased*price;
+        final int totalPrice = amountPurchased * price;
 
         User user = Essentials.getPlugin(Essentials.class).getUser(shopInfo.getPlayer());
         final BigDecimal bigDecimal = BigDecimal.valueOf(totalPrice);
         if(user.canAfford(bigDecimal)){
 
             if(InventoryUtils.copyInventory(shopInfo.getPlayer().getInventory()).addItem(Items.stripPriceLore(bought)).isEmpty()) {
+                bought.setAmount(amountPurchased);
 
                 user.sendMessage(ChatColor.GREEN + "Purchased: " + bought.getItemMeta().getDisplayName() + "!");
                 shopInfo.getPlayer().getInventory().addItem(Items.stripPriceLore(bought));

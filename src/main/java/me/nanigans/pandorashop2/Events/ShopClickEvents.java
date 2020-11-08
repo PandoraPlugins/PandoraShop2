@@ -8,6 +8,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -24,6 +25,7 @@ public class ShopClickEvents implements Listener {
     private int page;
     private Map<String, Object> itemInPurchase;
     private final PandoraShop2 plugin = PandoraShop2.getPlugin(PandoraShop2.class);
+    private ClickType clickType;
 
     /**
      * Initializes a customer of the shop
@@ -41,7 +43,7 @@ public class ShopClickEvents implements Listener {
     }
 
     @EventHandler
-    public void inventoryClick(InventoryClickEvent event) throws IOException, ParseException, NoSuchMethodException {
+    public void inventoryClick(InventoryClickEvent event) throws IOException, ParseException {
 
         if(event.getClickedInventory() != null) {
             if (event.getClickedInventory().equals(this.inv) && event.getWhoClicked().getUniqueId().equals(this.player.getUniqueId())) {
@@ -49,18 +51,19 @@ public class ShopClickEvents implements Listener {
                 ItemStack clicked = event.getCurrentItem();
 
                 player.playSound(player.getLocation(), Sound.valueOf("CLICK"), 2f, 1f);
+                this.clickType = event.getClick();
                 if (clicked != null) {
 
-                    if (!this.shopNameDir.endsWith("_")) {
+                    if (!this.currentShopPath.endsWith("_")) {
                         Map<String, Object> item = Items.getJsonItem(event.getSlot(), this.page, this.currentShopPath);
                         if (item != null)
                             new UtilItemClick(item, this);
 
                     }else{
-                        Map<String, Object> item = Items.getJsonItem(event.getSlot(), this.page,
-                                this.currentShopPath.substring(0, this.currentShopPath.length()-1));
-                        item.replace("amount", 64*clicked.getAmount());
-                        new UtilItemClick(item, this, UtilItemClick.class.getMethod("purchaseButton", Map.class));
+
+                        ItemStack clickedCopy = clicked.clone();
+                        clickedCopy.setAmount(clicked.getAmount()*64);
+                        new UtilItemClick(this).purchaseStack(clickedCopy, event.getClick().isLeftClick());
 
                     }
                 }
@@ -112,5 +115,9 @@ public class ShopClickEvents implements Listener {
         this.page = page;
     }
 
+
+    public ClickType getClickType() {
+        return clickType;
+    }
 
 }
