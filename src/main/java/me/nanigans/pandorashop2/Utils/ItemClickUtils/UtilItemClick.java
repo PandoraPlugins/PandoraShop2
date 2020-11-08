@@ -45,7 +45,12 @@ public class UtilItemClick {
 
    }
 
-
+    /**
+     * This will call a method directly
+     * @param jsonItem the item clicked
+     * @param shopInfo the shop info for the player
+     * @param method the method to call
+     */
    public UtilItemClick(Map<String, Object> jsonItem, ShopClickEvents shopInfo, Method method){
 
        this.shopInfo = shopInfo;

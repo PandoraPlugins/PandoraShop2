@@ -40,9 +40,8 @@ public class InventoryUtils {
                 for (Map.Entry<String, Object> itemPositions : itemPos.entrySet()) {
 
                     ItemStack clone = item.clone();
-                    clone = Items.stripPriceLore(clone);
                     clone.setAmount(Integer.parseInt(itemPositions.getKey()));
-
+                    Items.updatePriceLore(clone, clone.getAmount()*64);
 
                     inventory.setItem(Integer.parseInt(itemPositions.getValue().toString()), clone);
                 }

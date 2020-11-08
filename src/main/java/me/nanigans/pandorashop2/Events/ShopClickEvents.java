@@ -41,7 +41,7 @@ public class ShopClickEvents implements Listener {
     }
 
     @EventHandler
-    public void inventoryClick(InventoryClickEvent event) throws IOException, ParseException {
+    public void inventoryClick(InventoryClickEvent event) throws IOException, ParseException, NoSuchMethodException {
 
         if(event.getClickedInventory() != null) {
             if (event.getClickedInventory().equals(this.inv) && event.getWhoClicked().getUniqueId().equals(this.player.getUniqueId())) {
@@ -60,7 +60,7 @@ public class ShopClickEvents implements Listener {
                         Map<String, Object> item = Items.getJsonItem(event.getSlot(), this.page,
                                 this.currentShopPath.substring(0, this.currentShopPath.length()-1));
                         item.replace("amount", 64*clicked.getAmount());
-                        //new UtilItemClick(item, this, UtilItemClick.class.getMethod("purchaseButton"))
+                        new UtilItemClick(item, this, UtilItemClick.class.getMethod("purchaseButton", Map.class));
 
                     }
                 }

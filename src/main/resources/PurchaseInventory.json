@@ -32,6 +32,8 @@
           "extraItems": {
             "invSize": 27,
             "invName": "Buy Extra Items",
+            "canSell": false,
+            "canBuy": true,
             "itemPositions": {
               "1": 11,
               "2": 12,
