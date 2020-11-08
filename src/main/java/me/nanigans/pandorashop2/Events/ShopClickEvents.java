@@ -63,7 +63,7 @@ public class ShopClickEvents implements Listener {
 
                         ItemStack clickedCopy = clicked.clone();
                         clickedCopy.setAmount(clicked.getAmount()*64);
-                        new UtilItemClick(this).purchaseStack(clickedCopy, event.getClick().isLeftClick());
+                        new UtilItemClick(this).purchaseStack(clickedCopy, this.clickType.isLeftClick());
 
                     }
                 }

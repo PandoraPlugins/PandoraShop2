@@ -28,9 +28,7 @@ public class Items {
 
         JsonUtils json = new JsonUtils(path);
         return ShopPath.getConfigSectionValue(json.getData("page"+page+".items."+itemLoc), true);
-
     }
-
 
     public static ItemStack updatePriceLore(ItemStack item, int itemAmt){
 
@@ -57,7 +55,6 @@ public class Items {
         return item;
 
     }
-
 
 
     public static List<Double> getUnitPrice(ItemStack item){
@@ -135,6 +132,7 @@ public class Items {
         if(!itemData.containsKey("material") || itemData.get("material") == null) return null;
         ItemStack item = new ItemStack(Material.valueOf(itemData.get("material").toString()));
 
+        if(!itemData.containsKey("amount") || itemData.get("amount") == null) return null;
         item.setAmount(Integer.parseInt(itemData.get("amount").toString()));
 
         ItemMeta meta = item.getItemMeta();

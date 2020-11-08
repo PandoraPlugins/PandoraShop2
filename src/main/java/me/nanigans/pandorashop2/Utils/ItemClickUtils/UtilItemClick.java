@@ -50,6 +50,18 @@ public class UtilItemClick {
 
    }
 
+   public void enchantPage(Map<String, Object> itemClicked){
+
+       
+
+   }
+
+    /**
+     * Generates extra items inventory to purchase or sell extra items
+     * @param itemClicked the item data for the item clicked
+     * @throws IOException error
+     * @throws ParseException error
+     */
    public void extraItems(Map<String, Object> itemClicked) throws IOException, ParseException {
 
        if(((Map<String, Object>)itemClicked.get("shopData")).containsKey("extraItems") &&
