@@ -40,6 +40,28 @@ public class UtilItemClick {
 
    }
 
+    /**
+     * This will make the player sell the item being bought
+     * @param soldItem the item clicked in the inventory
+     * @throws IOException IOException
+     * @throws ParseException ParseException
+     */
+    public void sellButton(Map<String, Object> soldItem) throws IOException, ParseException {
+
+        Inventory inv = this.shopInfo.getInv();
+
+        ItemStack sellItem = InventoryUtils.getBuyingItem(
+                this.shopInfo.getShopNameDir()+"/PurchaseInventory.json", inv, this.shopInfo.getPage());
+
+        if(sellItem != null) {
+            ShopActionUtils.sell(this.shopInfo, sellItem);
+            Inventory backInv = InventoryUtils.createInventoryShop(this.shopInfo.getShopNameDir()+"/Categories.json", 1, this.shopInfo.getPlayer());
+            if(backInv != null)
+                this.shopInfo.getPlayer().openInventory(backInv);
+            else this.shopInfo.getPlayer().closeInventory();
+        }
+
+    }
 
     /**
      * This will make the player buy the item being bought
@@ -54,9 +76,13 @@ public class UtilItemClick {
        ItemStack buyingItem = InventoryUtils.getBuyingItem(
                this.shopInfo.getShopNameDir()+"/PurchaseInventory.json", inv, this.shopInfo.getPage());
 
-       if(buyingItem != null)
-       ShopActionUtils.buy(this.shopInfo, buyingItem);
-
+       if(buyingItem != null) {
+           ShopActionUtils.buy(this.shopInfo, buyingItem);
+           Inventory backInv = InventoryUtils.createInventoryShop(this.shopInfo.getShopNameDir()+"/Categories.json", 1, this.shopInfo.getPlayer());
+           if(backInv != null)
+           this.shopInfo.getPlayer().openInventory(backInv);
+           else this.shopInfo.getPlayer().closeInventory();
+       }
 
    }
 
