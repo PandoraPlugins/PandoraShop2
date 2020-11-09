@@ -3,7 +3,6 @@ package me.nanigans.pandorashop2.Events;
 import me.nanigans.pandorashop2.PandoraShop2;
 import me.nanigans.pandorashop2.Utils.Config.ConfigCreators;
 import me.nanigans.pandorashop2.Utils.Items.InventoryUtils;
-import net.citizensnpcs.api.event.NPCClickEvent;
 import net.citizensnpcs.api.event.NPCRemoveByCommandSenderEvent;
 import net.citizensnpcs.api.event.NPCRemoveEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;

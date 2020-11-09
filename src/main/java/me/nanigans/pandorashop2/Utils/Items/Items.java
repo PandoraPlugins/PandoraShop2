@@ -286,7 +286,6 @@ public class Items {
             }
 
         }
-        System.out.println("iteeeem = " + item);
 
         return item;
 
