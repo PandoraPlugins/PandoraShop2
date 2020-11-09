@@ -3,9 +3,11 @@ package me.nanigans.pandorashop2.Events;
 import com.earth2me.essentials.Enchantments;
 import me.nanigans.pandorashop2.PandoraShop2;
 import me.nanigans.pandorashop2.Utils.ItemClickUtils.UtilItemClick;
+import me.nanigans.pandorashop2.Utils.Items.InventoryUtils;
 import me.nanigans.pandorashop2.Utils.Items.Items;
 import me.nanigans.pandorashop2.Utils.PathUtils.ShopPath;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -78,6 +80,19 @@ public class ShopClickEvents implements Listener {
 
                     event.setCancelled(true);
 
+                    Map<String, Object> backBtn = Items.getJsonItem(event.getSlot(), this.page, this.currentShopPath);
+                    if((clicked.getItemMeta().getDisplayName().equals(ChatColor.RED+"Back") && clicked.getType() == Material.BARRIER) ||
+                            (backBtn != null && backBtn.get("isBackButton") != null && Boolean.parseBoolean(backBtn.get("isBackButton").toString()))){
+                        this.setInChangingInventory(true);
+                        Inventory inv = InventoryUtils.createInventoryShop(this.getShopNameDir()+"/Categories.json", 1, this.player);
+                        this.player.openInventory(inv);
+                        this.setInChangingInventory(false);
+                        this.inv = inv;
+                        this.setCurrentShopPath(this.getShopNameDir()+"/Categories.json");
+                        this.setPage(1);
+                        return;
+                    }
+
                     if (!this.currentShopPath.endsWith("extraItems.json") && !this.currentShopPath.endsWith("addEnchantment.json")) {
                         Map<String, Object> item = Items.getJsonItem(event.getSlot(), this.page, this.currentShopPath);
                         if (item != null)
@@ -97,7 +112,6 @@ public class ShopClickEvents implements Listener {
                             final List<String> collect = lore.stream().filter(i -> i.contains("Set " + ChatColor.DARK_AQUA)).collect(Collectors.toList());
                             final String[] s = collect.get(0).split(ChatColor.DARK_AQUA.toString())[1].split(" ");
 
-                            System.out.println("this.getClicked() = " + this.getClicked());
                             Enchantment enchantment = Enchantments.getByName(s[0]);
                             int level = Integer.parseInt(s[1]);
 

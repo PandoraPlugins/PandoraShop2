@@ -35,10 +35,7 @@ public class InventoryUtils {
         int maxEnchant = enchantment.getMaxLevel();
         Inventory inv = Bukkit.createInventory(player, 27, "Add Enchantments");
 
-        ItemStack backBtn = new ItemStack(Material.BARRIER);;
-        ItemMeta metaa = backBtn.getItemMeta();
-        metaa.setDisplayName(ChatColor.RED+"Back");
-        backBtn.setItemMeta(metaa);
+        ItemStack backBtn = Items.genBackButton();
         inv.setItem(0, backBtn);
         for (int i = 0; i < maxEnchant; i++) {
 
@@ -80,6 +77,9 @@ public class InventoryUtils {
             Inventory inventory = Bukkit.createInventory(player, Integer.parseInt(extraItems.get("invSize").toString()),
                     ChatColor.translateAlternateColorCodes('&', extraItems.get("invName").toString()));
 
+            ItemStack backBtn = Items.genBackButton();
+            inventory.setItem(0, backBtn);
+
             Map<String, Object> itemPos = ((Map<String, Object>) extraItems.get("itemPositions"));
 
             if(itemPos != null && itemPos.size() > 0) {
@@ -88,6 +88,8 @@ public class InventoryUtils {
                     ItemStack clone = item.clone();
                     clone.setAmount(Integer.parseInt(itemPositions.getKey()));
                     Items.updatePriceLore(clone, clone.getAmount()*64);
+                    if(itemPositions.getValue().equals("0"))
+                        itemPositions.setValue("1");
 
                     inventory.setItem(Integer.parseInt(itemPositions.getValue().toString()), clone);
                 }

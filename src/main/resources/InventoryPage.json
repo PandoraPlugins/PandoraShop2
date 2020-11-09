@@ -11,6 +11,7 @@
         "amount": 1,
         "lore": [],
         "glow": false,
+        "isBackButton": false,
         "_comment1": "glow is for force enchanted glow. This is not needed if there are enchantments in the enchantments section",
         "enchantments": {
           "DURABILITY": 2
@@ -42,7 +43,7 @@
               "4": 14,
               "5": 15
             },
-            "_comment": "^ numStacks: InventoryPosition"
+            "_comment": "^format numStacks: InventoryPosition | Slot 0 is reserved for the back button"
           },
           "_comment3": "^ Will change the item by the amount of this it",
           "addEnchantment": {

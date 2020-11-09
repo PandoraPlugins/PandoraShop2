@@ -25,6 +25,7 @@ public class JsonUtils {
 
     public Object getData(String path) throws IOException, ParseException {
 
+        if(!this.jsonPath.exists()) return null;
         String[] paths = path.split("\\.");
         JSONParser jsonParser = new JSONParser();
         Object parsed = jsonParser.parse(new FileReader(this.jsonPath));

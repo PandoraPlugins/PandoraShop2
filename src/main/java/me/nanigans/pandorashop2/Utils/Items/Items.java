@@ -30,6 +30,17 @@ public class Items {
         return ShopPath.getConfigSectionValue(json.getData("page"+page+".items."+itemLoc), true);
     }
 
+    public static ItemStack genBackButton(){
+
+        ItemStack backBtn = new ItemStack(Material.BARRIER);;
+        ItemMeta metaa = backBtn.getItemMeta();
+        metaa.setDisplayName(ChatColor.RED+"Back");
+        backBtn.setItemMeta(metaa);
+
+        return backBtn;
+
+    }
+
     public static ItemStack updatePriceLore(ItemStack item, int itemAmt){
 
         List<Double> unitPrice = getUnitPrice(item);
