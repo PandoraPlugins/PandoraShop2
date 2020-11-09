@@ -10,9 +10,12 @@ import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.json.simple.parser.ParseException;
@@ -32,6 +35,7 @@ public class ShopClickEvents implements Listener {
     private final PandoraShop2 plugin = PandoraShop2.getPlugin(PandoraShop2.class);
     private ClickType clickType;
     private ItemStack clicked;
+    private boolean inChangingInventory = false;
 
     /**
      * Initializes a customer of the shop
@@ -48,6 +52,12 @@ public class ShopClickEvents implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
+    /**
+     * When an item is clicked, it will perform the necessary actions according to its json data
+     * @param event click event
+     * @throws IOException error
+     * @throws ParseException error
+     */
     @EventHandler
     public void inventoryClick(InventoryClickEvent event) throws IOException, ParseException {
 
@@ -60,6 +70,8 @@ public class ShopClickEvents implements Listener {
                 player.playSound(player.getLocation(), Sound.valueOf("CLICK"), 2f, 1f);
                 this.clickType = event.getClick();
                 if (clicked != null) {
+
+                    event.setCancelled(true);
 
                     if (!this.currentShopPath.endsWith("extraItems.json") && !this.currentShopPath.endsWith("addEnchantment.json")) {
                         Map<String, Object> item = Items.getJsonItem(event.getSlot(), this.page, this.currentShopPath);
@@ -90,9 +102,27 @@ public class ShopClickEvents implements Listener {
                     }
                 }
 
-                event.setCancelled(true);
 
             }
+        }
+
+    }
+
+    @EventHandler
+    public void moveItem(InventoryDragEvent event){
+
+        if(event.getInventory().equals(this.inv) && event.getWhoClicked().getUniqueId().equals(this.player.getUniqueId())){
+            event.setCancelled(true);
+        }
+
+    }
+
+    @EventHandler
+    public void inventoryClose(InventoryCloseEvent event){
+
+        if(event.getPlayer().getUniqueId().equals(this.player.getUniqueId())){
+            if(!this.inChangingInventory)
+            HandlerList.unregisterAll(this);
         }
 
     }
@@ -144,5 +174,9 @@ public class ShopClickEvents implements Listener {
 
     public ItemStack getClicked() {
         return clicked;
+    }
+
+    public void setInChangingInventory(boolean inChangingInventory) {
+        this.inChangingInventory = inChangingInventory;
     }
 }

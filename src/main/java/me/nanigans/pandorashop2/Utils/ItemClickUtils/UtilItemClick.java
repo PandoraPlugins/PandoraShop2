@@ -73,7 +73,10 @@ public class UtilItemClick {
                meta.addEnchant(enchantment, power+1, false);
                item.setItemMeta(meta);
                player.getInventory().setItemInHand(item);
+               this.shopInfo.setInChangingInventory(true);
                player.openInventory(InventoryUtils.createInventoryShop(this.shopInfo.getShopNameDir()+"/Categories.json", 1, player));
+               this.shopInfo.setInChangingInventory(false);
+
            }
        }else{
            player.sendMessage(ChatColor.RED+"Please hold an item to enchant");
@@ -104,7 +107,9 @@ public class UtilItemClick {
                                    this.shopInfo.getClicked(), enchantment);
 
                            if (inv != null) {
+                               this.shopInfo.setInChangingInventory(true);
                                this.shopInfo.getPlayer().openInventory(inv);
+                               this.shopInfo.setInChangingInventory(false);
                                this.shopInfo.setInv(inv);
                                this.shopInfo.setCurrentShopPath(this.shopInfo.getShopNameDir() + "/addEnchantment.json");
                                this.shopInfo.setPage(1);
@@ -134,7 +139,9 @@ public class UtilItemClick {
            Inventory inv = InventoryUtils.createExtraItemsInventory(this.shopInfo.getPlayer(), itemClicked, beingSold);
 
            if(inv != null) {
+               this.shopInfo.setInChangingInventory(true);
                this.shopInfo.getPlayer().openInventory(inv);
+               this.shopInfo.setInChangingInventory(false);
                this.shopInfo.setCurrentShopPath(this.shopInfo.getCurrentShopPath()+"extraItems.json");
                this.shopInfo.setInv(inv);
                this.shopInfo.setPage(1);
@@ -218,7 +225,9 @@ public class UtilItemClick {
                 ShopActionUtils.sell(this.shopInfo, sellItem);
                 Inventory backInv = InventoryUtils.createInventoryShop(this.shopInfo.getShopNameDir() + "/Categories.json", 1, this.shopInfo.getPlayer());
                 if (backInv != null) {
+                    this.shopInfo.setInChangingInventory(true);
                     this.shopInfo.getPlayer().openInventory(backInv);
+                    this.shopInfo.setInChangingInventory(false);
                     this.shopInfo.setInv(backInv);
                     this.shopInfo.setPage(1);
                     this.shopInfo.setCurrentShopPath(this.shopInfo.getShopNameDir()+"/Categories");
@@ -251,7 +260,10 @@ public class UtilItemClick {
                ShopActionUtils.buy(this.shopInfo, buyingItem);
                Inventory backInv = InventoryUtils.createInventoryShop(this.shopInfo.getShopNameDir() + "/Categories.json", 1, this.shopInfo.getPlayer());
                if (backInv != null) {
+                   this.shopInfo.setInChangingInventory(true);
                    this.shopInfo.getPlayer().openInventory(backInv);
+                   this.shopInfo.setInChangingInventory(false);
+
                    this.shopInfo.setInv(backInv);
                    this.shopInfo.setPage(1);
                    this.shopInfo.setCurrentShopPath(this.shopInfo.getShopNameDir()+"/Categories");
@@ -276,7 +288,10 @@ public class UtilItemClick {
            else ShopActionUtils.sell(this.shopInfo, buyingItem);
            Inventory backInv = InventoryUtils.createInventoryShop(this.shopInfo.getShopNameDir() + "/Categories.json", 1, this.shopInfo.getPlayer());
            if (backInv != null) {
+               this.shopInfo.setInChangingInventory(true);
                this.shopInfo.getPlayer().openInventory(backInv);
+               this.shopInfo.setInChangingInventory(false);
+
                this.shopInfo.setInv(backInv);
                this.shopInfo.setPage(1);
                this.shopInfo.setCurrentShopPath(this.shopInfo.getShopNameDir()+"/Categories");
@@ -319,7 +334,10 @@ public class UtilItemClick {
                    this.shopInfo.getCurrentShopPath(), this.shopInfo.getPage(), boughtItem, this.shopInfo.getPlayer());
            if(inv != null) {
                this.shopInfo.setItemInPurchase(boughtItem);
+               this.shopInfo.setInChangingInventory(true);
                this.shopInfo.getPlayer().openInventory(inv);
+               this.shopInfo.setInChangingInventory(false);
+
                this.shopInfo.setInv(inv);
                this.shopInfo.setPage(1);
                this.shopInfo.setCurrentShopPath(purchase.getPath());
@@ -346,7 +364,10 @@ public class UtilItemClick {
             Inventory inv = InventoryUtils.createInventoryShop(this.shopInfo.getCurrentShopPath(), this.shopInfo.getPage()-1, this.shopInfo.getPlayer());
             if(inv != null){
                 this.shopInfo.setPage(this.shopInfo.getPage()-1);
+                this.shopInfo.setInChangingInventory(true);
                 this.shopInfo.getPlayer().openInventory(inv);
+                this.shopInfo.setInChangingInventory(false);
+
                 this.shopInfo.setInv(inv);
 
             }
@@ -369,7 +390,10 @@ public class UtilItemClick {
            Inventory inv = InventoryUtils.createInventoryShop(this.shopInfo.getCurrentShopPath(), this.shopInfo.getPage()+1, this.shopInfo.getPlayer());
            if(inv != null){
                this.shopInfo.setPage(this.shopInfo.getPage()+1);
+               this.shopInfo.setInChangingInventory(true);
                this.shopInfo.getPlayer().openInventory(inv);
+               this.shopInfo.setInChangingInventory(false);
+
                this.shopInfo.setInv(inv);
            }
 
@@ -392,7 +416,10 @@ public class UtilItemClick {
 
            Inventory inv = InventoryUtils.createInventoryShop(dir, this.shopInfo.getPage(), this.shopInfo.getPlayer());
            if(inv != null) {
+               this.shopInfo.setInChangingInventory(true);
                this.shopInfo.getPlayer().openInventory(inv);
+               this.shopInfo.setInChangingInventory(false);
+
                this.shopInfo.setInv(inv);
                this.shopInfo.setCurrentShopPath(dir);
            }
