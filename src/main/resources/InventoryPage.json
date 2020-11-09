@@ -7,6 +7,7 @@
 
       "0": {
         "material": "STONE",
+        "_comment": "material can be the item ID/# (351/4) or the material enum from https://helpch.at/docs/1.8/org/bukkit/Material.html",
         "displayName": "Example_Item",
         "amount": 1,
         "lore": [],
@@ -16,6 +17,7 @@
         "enchantments": {
           "DURABILITY": 2
         },
+        "_comment2": "Enchant names uses essentials names or enchantment enum from https://helpch.at/docs/1.8/index.html?org/bukkit/enchantments/Enchantment.html",
         "NBTData": {
           "Key": "Data"
         },
@@ -34,8 +36,6 @@
           "extraItems": {
             "invSize": 27,
             "invName": "Buy Extra Items",
-            "canSell": false,
-            "canBuy": true,
             "itemPositions": {
               "1": 11,
               "2": 12,
@@ -43,7 +43,7 @@
               "4": 14,
               "5": 15
             },
-            "_comment": "^format numStacks: InventoryPosition | Slot 0 is reserved for the back button"
+            "_comment": "^format NumStacks: InventoryPosition | Slot 0 is reserved for the back button"
           },
           "_comment3": "^ Will change the item by the amount of this it",
           "addEnchantment": {

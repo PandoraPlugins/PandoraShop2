@@ -141,7 +141,12 @@ public class Items {
     public static ItemStack createShopItem(Map<String, Object> itemData){
 
         if(!itemData.containsKey("material") || itemData.get("material") == null) return null;
-        ItemStack item = new ItemStack(Material.valueOf(itemData.get("material").toString()));
+        ItemStack item;
+        if(itemData.get("material").toString().contains("/")){
+
+            item = new ItemStack(Material.getMaterial(Integer.parseInt(itemData.get("material").toString().split("/")[0])),
+                    1, Byte.parseByte(itemData.get("material").toString().split("/")[1]));
+        } else item = new ItemStack(Material.valueOf(itemData.get("material").toString()));
 
         if(!itemData.containsKey("amount") || itemData.get("amount") == null) return null;
         item.setAmount(Integer.parseInt(itemData.get("amount").toString()));
@@ -227,7 +232,13 @@ public class Items {
 
         if(json.getData(itemPath+".material") == null) return null;
 
-        ItemStack item = new ItemStack(Material.valueOf(json.getData(itemPath+".material").toString()));
+        ItemStack item;
+        if(json.getData(itemPath+".material").toString().contains("/")){
+
+            item = new ItemStack(Material.getMaterial(Integer.parseInt(json.getData(itemPath+".material").toString().split("/")[0])),
+                    1, Byte.parseByte(json.getData(itemPath+".material").toString().split("/")[1]));
+
+        } else item = new ItemStack(Material.valueOf(json.getData(itemPath+".material").toString()));
 
         item.setAmount(Integer.parseInt(json.getData(itemPath+".amount").toString()));
 

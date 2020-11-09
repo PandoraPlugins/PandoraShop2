@@ -76,7 +76,7 @@ public class ShopClickEvents implements Listener {
 
                 player.playSound(player.getLocation(), Sound.valueOf("CLICK"), 2f, 1f);
                 this.clickType = event.getClick();
-                if (clicked != null) {
+                if (clicked != null && clicked.getType() != Material.AIR) {
 
                     event.setCancelled(true);
 
