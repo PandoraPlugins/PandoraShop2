@@ -20,7 +20,7 @@ public class NBTGet implements CommandExecutor {
 
                 Player player = (Player) sender;
 
-                if(true || PandoraShop2.hasPerms(player, "NBT.ShowAll")){
+                if(PandoraShop2.hasPerms(player, "NBT.ShowAll")){
 
                     if(player.getInventory().getItemInHand() != null) {
 

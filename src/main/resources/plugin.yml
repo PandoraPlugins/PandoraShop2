@@ -9,7 +9,12 @@ commands:
   nbtshow:
     description: "Gets all nbt data on the item being held"
     usage: /nbtshow
+    aliase: ["nbt", "nbtall", "shownbt"]
   createshop:
     description: "Create a new shop"
     usage: /createshop <shopname>
     aliase: ["cs", "newshop", "shopnew", "shopcreate"]
+  permissions:
+    NBT.ShowAll:
+      default: op
+      description: "Allows the user to use the nbtshow command

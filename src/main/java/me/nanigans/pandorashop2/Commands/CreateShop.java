@@ -18,26 +18,28 @@ public class CreateShop implements CommandExecutor {
 
         if(command.getName().equalsIgnoreCase("createshop")) {
             if (sender instanceof Player) {
+                Player player = ((Player) sender);
 
-                if (args.length > 0) {
-                    Player player = ((Player) sender);
+                if(PandoraShop2.hasPerms(player, "Shop.Create")) {
 
-                    NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, ChatColor.translateAlternateColorCodes('&', args[0]));
-                    npc.data().setPersistent("IsShop", plugin.getDataFolder() + "/Shops/" + ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', npc.getName())));
+                    if (args.length > 0) {
+                        NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, ChatColor.translateAlternateColorCodes('&', args[0]));
+                        npc.data().setPersistent("IsShop", plugin.getDataFolder() + "/Shops/" + ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', npc.getName())));
 
-                    npc.spawn(player.getLocation());
+                        npc.spawn(player.getLocation());
 
-                    player.sendMessage(ChatColor.GREEN+"Shop: " + ChatColor.YELLOW+args[0] + ChatColor.GREEN+" created!");
+                        player.sendMessage(ChatColor.GREEN + "Shop: " + ChatColor.YELLOW + args[0] + ChatColor.GREEN + " created!");
 
-                } else {
-                    sender.sendMessage(ChatColor.RED + "Please specify a shop name");
+                    } else {
+                        sender.sendMessage(ChatColor.RED + "Please specify a shop name");
+                    }
+                }else{
+                    player.sendMessage(ChatColor.RED+"Invalid Permissions");
                 }
-                return true;
-
             } else {
                 sender.sendMessage(ChatColor.RED + "Only players may use this command");
-                return true;
             }
+            return true;
 
         }
         return false;
