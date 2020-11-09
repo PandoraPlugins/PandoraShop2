@@ -70,9 +70,10 @@ public class UtilItemClick {
            ItemStack backItm = this.shopInfo.getClicked();
 
            if(backItm.getItemMeta().getDisplayName().equals(ChatColor.RED+"Back")){
-               this.shopInfo.setInChangingInventory(true);
-               player.openInventory(InventoryUtils.createInventoryShop(this.shopInfo.getShopNameDir()+"/Categories.json", 1, player));
-               this.shopInfo.setInChangingInventory(false);
+               final Inventory inventory = InventoryUtils.createInventoryShop(this.shopInfo.getShopNameDir() + "/Categories.json", 1, player);
+
+               InventoryUtils.backBtn(inventory, player, shopInfo, "/Categories.json");
+
                return;
            }
        }
@@ -83,7 +84,7 @@ public class UtilItemClick {
            if(ShopActionUtils.buy(this.shopInfo, bought)) {
 
                try {
-                   item.addEnchantment(enchantment, power + 1);
+                   item.addEnchantment(enchantment, power);
                }catch(Exception e){
                    player.sendMessage(ChatColor.RED+"Cannot assign this enchantment to your item");
                    player.closeInventory();
@@ -91,9 +92,8 @@ public class UtilItemClick {
                }
                player.getInventory().setItemInHand(item);
 
-               this.shopInfo.setInChangingInventory(true);
-               player.openInventory(InventoryUtils.createInventoryShop(this.shopInfo.getShopNameDir()+"/Categories.json", 1, player));
-               this.shopInfo.setInChangingInventory(false);
+               Inventory inventory = InventoryUtils.createInventoryShop(this.shopInfo.getShopNameDir()+"/Categories.json", 1, player);
+               InventoryUtils.backBtn(inventory, player, shopInfo, "/Categories.json");
 
            }
        }else{
@@ -124,14 +124,8 @@ public class UtilItemClick {
                            Inventory inv = InventoryUtils.createEnchantmentItemInventory(this.shopInfo.getPlayer(),
                                    this.shopInfo.getClicked(), enchantment);
 
-                           if (inv != null) {
-                               this.shopInfo.setInChangingInventory(true);
-                               this.shopInfo.getPlayer().openInventory(inv);
-                               this.shopInfo.setInChangingInventory(false);
-                               this.shopInfo.setInv(inv);
-                               this.shopInfo.setCurrentShopPath(this.shopInfo.getShopNameDir() + "/addEnchantment.json");
-                               this.shopInfo.setPage(1);
-                           }
+                       InventoryUtils.backBtn(inv, shopInfo.getPlayer(), shopInfo, "addEnchantment.json");
+
 
                    }
                }
@@ -157,12 +151,8 @@ public class UtilItemClick {
            Inventory inv = InventoryUtils.createExtraItemsInventory(this.shopInfo.getPlayer(), itemClicked, beingSold);
 
            if(inv != null) {
-               this.shopInfo.setInChangingInventory(true);
-               this.shopInfo.getPlayer().openInventory(inv);
-               this.shopInfo.setInChangingInventory(false);
-               this.shopInfo.setCurrentShopPath(this.shopInfo.getCurrentShopPath()+"extraItems.json");
-               this.shopInfo.setInv(inv);
-               this.shopInfo.setPage(1);
+               InventoryUtils.backBtn(inv, shopInfo.getPlayer(), shopInfo, "/extraItems.json");
+
            }
 
        }
@@ -243,12 +233,8 @@ public class UtilItemClick {
                 ShopActionUtils.sell(this.shopInfo, sellItem);
                 Inventory backInv = InventoryUtils.createInventoryShop(this.shopInfo.getShopNameDir() + "/Categories.json", 1, this.shopInfo.getPlayer());
                 if (backInv != null) {
-                    this.shopInfo.setInChangingInventory(true);
-                    this.shopInfo.getPlayer().openInventory(backInv);
-                    this.shopInfo.setInChangingInventory(false);
-                    this.shopInfo.setInv(backInv);
-                    this.shopInfo.setPage(1);
-                    this.shopInfo.setCurrentShopPath(this.shopInfo.getShopNameDir()+"/Categories");
+                    InventoryUtils.backBtn(inv, shopInfo.getPlayer(), shopInfo, "/Categories.json");
+
                 }
                 else this.shopInfo.getPlayer().closeInventory();
             }
@@ -278,13 +264,8 @@ public class UtilItemClick {
                ShopActionUtils.buy(this.shopInfo, buyingItem);
                Inventory backInv = InventoryUtils.createInventoryShop(this.shopInfo.getShopNameDir() + "/Categories.json", 1, this.shopInfo.getPlayer());
                if (backInv != null) {
-                   this.shopInfo.setInChangingInventory(true);
-                   this.shopInfo.getPlayer().openInventory(backInv);
-                   this.shopInfo.setInChangingInventory(false);
+                   InventoryUtils.backBtn(inv, shopInfo.getPlayer(), shopInfo, "/Categories.json");
 
-                   this.shopInfo.setInv(backInv);
-                   this.shopInfo.setPage(1);
-                   this.shopInfo.setCurrentShopPath(this.shopInfo.getShopNameDir()+"/Categories");
                }
                else this.shopInfo.getPlayer().closeInventory();
            }
@@ -306,13 +287,8 @@ public class UtilItemClick {
            else ShopActionUtils.sell(this.shopInfo, buyingItem);
            Inventory backInv = InventoryUtils.createInventoryShop(this.shopInfo.getShopNameDir() + "/Categories.json", 1, this.shopInfo.getPlayer());
            if (backInv != null) {
-               this.shopInfo.setInChangingInventory(true);
-               this.shopInfo.getPlayer().openInventory(backInv);
-               this.shopInfo.setInChangingInventory(false);
+               InventoryUtils.backBtn(backInv, shopInfo.getPlayer(), shopInfo, "/Categories.json");
 
-               this.shopInfo.setInv(backInv);
-               this.shopInfo.setPage(1);
-               this.shopInfo.setCurrentShopPath(this.shopInfo.getShopNameDir()+"/Categories");
            }
            else this.shopInfo.getPlayer().closeInventory();
        }

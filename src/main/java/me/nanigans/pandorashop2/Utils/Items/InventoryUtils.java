@@ -1,6 +1,7 @@
 package me.nanigans.pandorashop2.Utils.Items;
 
 import com.earth2me.essentials.Enchantments;
+import me.nanigans.pandorashop2.Events.ShopClickEvents;
 import me.nanigans.pandorashop2.PandoraShop2;
 import me.nanigans.pandorashop2.Utils.Config.JsonUtils;
 import me.nanigans.pandorashop2.Utils.PathUtils.ShopPath;
@@ -17,6 +18,7 @@ import org.json.simple.parser.ParseException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class InventoryUtils {
 
@@ -37,6 +39,7 @@ public class InventoryUtils {
 
         ItemStack backBtn = Items.genBackButton();
         inv.setItem(0, backBtn);
+
         for (int i = 0; i < maxEnchant; i++) {
 
             ItemStack enchClone = item.clone();
@@ -46,8 +49,9 @@ public class InventoryUtils {
 
             meta.addEnchant(enchantment, i+1, false);
             Items.updatePriceLore(enchClone, enchClone.getAmount());
+            String normalName = Enchantments.entrySet().stream().filter(e -> e.getValue().getName().equals(enchantment.getName())).collect(Collectors.toList()).get(0).getKey();
 
-            lore.add("Set " + ChatColor.DARK_AQUA + enchantment.getName() + " " + i);
+            lore.add("Set " + ChatColor.DARK_AQUA + (normalName == null ? enchantment.getName() : normalName) + " " + (i+1));
             lore.add("to your item. (This will not add the enchantment");
             lore.add("to previous enchantments)");
             meta.setLore(lore);
@@ -166,7 +170,6 @@ public class InventoryUtils {
 
         shopPath = ShopPath.shopPath(shopPath, plugin);
         JsonUtils jsonPurchase = new JsonUtils(shopPath);//purchaseInventory json
-        //JsonUtils jsonClicked = new JsonUtils(previousShopPath); // item clicked inv
 
         final Map<String, Object> purchaseInvData = ShopPath.getConfigSectionValue(jsonPurchase.getData("page1.items"), true);
 
@@ -177,12 +180,17 @@ public class InventoryUtils {
 
         for (Map.Entry<String, Object> posItemEntry : purchaseInvData.entrySet()) {
 
-            ItemStack item;
+            ItemStack item = null;
 
             if(posItemEntry.getValue().toString().equalsIgnoreCase("boughtItem")){
                 item = itemBought;
-            }else
-                item = Items.createShopItem(previousShopPath, posItemEntry.getKey(), page);
+            }else {
+                try {
+                    item = Items.createShopItem(shopPath, posItemEntry.getKey(), page);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
 
             inventory.setItem(Integer.parseInt(posItemEntry.getKey()), item);
         }
@@ -260,6 +268,17 @@ public class InventoryUtils {
         newInv.setContents(inv.getContents());
 
         return newInv;
+
+    }
+
+    public static void backBtn(Inventory toInv, Player player, ShopClickEvents shopInfo, String shopPath){
+
+        shopInfo.setCurrentShopPath(shopInfo.getShopNameDir()+shopPath);
+        shopInfo.setInv(toInv);
+        shopInfo.setInChangingInventory(true);
+        player.openInventory(toInv);
+        shopInfo.setInChangingInventory(false);
+        shopInfo.setPage(1);
 
     }
 

@@ -83,13 +83,8 @@ public class ShopClickEvents implements Listener {
                     Map<String, Object> backBtn = Items.getJsonItem(event.getSlot(), this.page, this.currentShopPath);
                     if((clicked.getItemMeta().getDisplayName().equals(ChatColor.RED+"Back") && clicked.getType() == Material.BARRIER) ||
                             (backBtn != null && backBtn.get("isBackButton") != null && Boolean.parseBoolean(backBtn.get("isBackButton").toString()))){
-                        this.setInChangingInventory(true);
                         Inventory inv = InventoryUtils.createInventoryShop(this.getShopNameDir()+"/Categories.json", 1, this.player);
-                        this.player.openInventory(inv);
-                        this.setInChangingInventory(false);
-                        this.inv = inv;
-                        this.setCurrentShopPath(this.getShopNameDir()+"/Categories.json");
-                        this.setPage(1);
+                        InventoryUtils.backBtn(inv, player, this, "/Categories.json");
                         return;
                     }
 

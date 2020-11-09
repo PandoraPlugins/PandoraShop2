@@ -226,6 +226,7 @@ public class Items {
         String itemPath = "page"+shopPage+".items."+itemKey;
 
         if(json.getData(itemPath+".material") == null) return null;
+
         ItemStack item = new ItemStack(Material.valueOf(json.getData(itemPath+".material").toString()));
 
         item.setAmount(Integer.parseInt(json.getData(itemPath+".amount").toString()));
@@ -285,6 +286,7 @@ public class Items {
             }
 
         }
+        System.out.println("iteeeem = " + item);
 
         return item;
 
