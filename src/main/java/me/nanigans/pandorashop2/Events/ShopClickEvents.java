@@ -62,6 +62,11 @@ public class ShopClickEvents implements Listener {
     public void inventoryClick(InventoryClickEvent event) throws IOException, ParseException {
 
         if(event.getClickedInventory() != null) {
+
+            if(event.getClick().isShiftClick() && event.getClickedInventory().equals(this.player.getInventory())){
+                event.setCancelled(true);
+                return;
+            }
             if (event.getClickedInventory().equals(this.inv) && event.getWhoClicked().getUniqueId().equals(this.player.getUniqueId())) {
 
                 ItemStack clicked = event.getCurrentItem();
@@ -92,6 +97,7 @@ public class ShopClickEvents implements Listener {
                             final List<String> collect = lore.stream().filter(i -> i.contains("Set " + ChatColor.DARK_AQUA)).collect(Collectors.toList());
                             final String[] s = collect.get(0).split(ChatColor.DARK_AQUA.toString())[1].split(" ");
 
+                            System.out.println("this.getClicked() = " + this.getClicked());
                             Enchantment enchantment = Enchantments.getByName(s[0]);
                             int level = Integer.parseInt(s[1]);
 
@@ -109,7 +115,7 @@ public class ShopClickEvents implements Listener {
     }
 
     @EventHandler
-    public void moveItem(InventoryDragEvent event){
+    public void dragItem(InventoryDragEvent event){
 
         if(event.getInventory().equals(this.inv) && event.getWhoClicked().getUniqueId().equals(this.player.getUniqueId())){
             event.setCancelled(true);
@@ -118,11 +124,13 @@ public class ShopClickEvents implements Listener {
     }
 
     @EventHandler
-    public void inventoryClose(InventoryCloseEvent event){
+    public void inventoryClose(InventoryCloseEvent event) throws Throwable {
 
         if(event.getPlayer().getUniqueId().equals(this.player.getUniqueId())){
-            if(!this.inChangingInventory)
-            HandlerList.unregisterAll(this);
+            if(!this.inChangingInventory) {
+                HandlerList.unregisterAll(this);
+                this.finalize();
+            }
         }
 
     }

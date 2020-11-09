@@ -6,6 +6,7 @@ import me.nanigans.pandorashop2.Utils.Config.JsonUtils;
 import me.nanigans.pandorashop2.Utils.PathUtils.ShopPath;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -34,6 +35,11 @@ public class InventoryUtils {
         int maxEnchant = enchantment.getMaxLevel();
         Inventory inv = Bukkit.createInventory(player, 27, "Add Enchantments");
 
+        ItemStack backBtn = new ItemStack(Material.BARRIER);;
+        ItemMeta metaa = backBtn.getItemMeta();
+        metaa.setDisplayName(ChatColor.RED+"Back");
+        backBtn.setItemMeta(metaa);
+        inv.setItem(0, backBtn);
         for (int i = 0; i < maxEnchant; i++) {
 
             ItemStack enchClone = item.clone();

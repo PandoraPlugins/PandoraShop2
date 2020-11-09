@@ -7,6 +7,7 @@ import me.nanigans.pandorashop2.Utils.Config.ConfigCreators;
 import me.nanigans.pandorashop2.Utils.Items.InventoryUtils;
 import me.nanigans.pandorashop2.Utils.Items.Items;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -65,14 +66,31 @@ public class UtilItemClick {
      */
    public void enchantItem(Player player, Enchantment enchantment, int power, ItemStack bought) throws IOException, ParseException {
 
+       if(this.shopInfo.getClicked() != null){
+           ItemStack backItm = this.shopInfo.getClicked();
+
+           if(backItm.getItemMeta().getDisplayName().equals(ChatColor.RED+"Back")){
+               this.shopInfo.setInChangingInventory(true);
+               player.openInventory(InventoryUtils.createInventoryShop(this.shopInfo.getShopNameDir()+"/Categories.json", 1, player));
+               this.shopInfo.setInChangingInventory(false);
+               return;
+           }
+       }
        ItemStack item = player.getInventory().getItemInHand();
 
-       if(item != null){
+       if(item != null && item.getType() != Material.AIR){
+
            if(ShopActionUtils.buy(this.shopInfo, bought)) {
-               ItemMeta meta = item.getItemMeta();
-               meta.addEnchant(enchantment, power+1, false);
-               item.setItemMeta(meta);
+
+               try {
+                   item.addEnchantment(enchantment, power + 1);
+               }catch(Exception e){
+                   player.sendMessage(ChatColor.RED+"Cannot assign this enchantment to your item");
+                   player.closeInventory();
+                   return;
+               }
                player.getInventory().setItemInHand(item);
+
                this.shopInfo.setInChangingInventory(true);
                player.openInventory(InventoryUtils.createInventoryShop(this.shopInfo.getShopNameDir()+"/Categories.json", 1, player));
                this.shopInfo.setInChangingInventory(false);
