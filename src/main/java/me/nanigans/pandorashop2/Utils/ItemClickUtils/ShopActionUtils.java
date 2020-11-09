@@ -28,6 +28,7 @@ public class ShopActionUtils {
         sold.setAmount(amountSold);
 
         Map<String, Object> jsonItem = shopInfo.getItemInPurchase();
+        if(((Map<String, Object>) jsonItem.get("shopData")).get("sellPrice") == null) return;
         int price = Integer.parseInt(((Map<String, Object>) jsonItem.get("shopData")).get("sellPrice").toString());
 
         final int totalPrice = amountSold*price;
@@ -60,6 +61,8 @@ public class ShopActionUtils {
 
         int amountPurchased = bought.getAmount();
         Map<String, Object> jsonItem = shopInfo.getItemInPurchase();
+        if(((Map<String, Object>) jsonItem.get("shopData")).get("buyPrice") == null) return false;
+
         int price = Integer.parseInt(((Map<String, Object>) jsonItem.get("shopData")).get("buyPrice").toString());
 
         final int totalPrice = amountPurchased * price;
