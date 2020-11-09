@@ -54,8 +54,9 @@ public class ShopActionUtils {
      * Buys the item in question
      * @param shopInfo shopinfo for the current player
      * @param bought what item was bought
+     * @return if the purchase was successful or not
      */
-    public static void buy(ShopClickEvents shopInfo, ItemStack bought){
+    public static boolean buy(ShopClickEvents shopInfo, ItemStack bought){
 
         int amountPurchased = bought.getAmount();
         Map<String, Object> jsonItem = shopInfo.getItemInPurchase();
@@ -67,12 +68,15 @@ public class ShopActionUtils {
         final BigDecimal bigDecimal = BigDecimal.valueOf(totalPrice);
         if(user.canAfford(bigDecimal)){
 
-            if(InventoryUtils.copyInventory(shopInfo.getPlayer().getInventory()).addItem(Items.stripPriceLore(bought)).isEmpty()) {
+            if(InventoryUtils.copyInventory(shopInfo.getPlayer().getInventory()).addItem(Items.stripPriceLore(bought)).isEmpty() ||
+                    shopInfo.getCurrentShopPath().endsWith("addEnchantment.json")) {
                 bought.setAmount(amountPurchased);
 
                 user.sendMessage(ChatColor.GREEN + "Purchased: " + bought.getItemMeta().getDisplayName() + "!");
+                if(!shopInfo.getCurrentShopPath().endsWith("addEnchantment.json"))
                 shopInfo.getPlayer().getInventory().addItem(Items.stripPriceLore(bought));
                 user.takeMoney(bigDecimal);
+                return true;
             }else{
                 shopInfo.getPlayer().closeInventory();
                 shopInfo.getPlayer().sendMessage(ChatColor.RED+"Your inventory is too full to add this item!");
@@ -82,6 +86,7 @@ public class ShopActionUtils {
             shopInfo.getPlayer().closeInventory();
             user.sendMessage(ChatColor.RED+"You cannot afford this item.");
         }
+        return false;
 
     }
 

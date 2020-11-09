@@ -1,19 +1,22 @@
 package me.nanigans.pandorashop2.Utils.ItemClickUtils;
 
+import com.earth2me.essentials.Enchantments;
 import me.nanigans.pandorashop2.Events.ShopClickEvents;
 import me.nanigans.pandorashop2.PandoraShop2;
 import me.nanigans.pandorashop2.Utils.Config.ConfigCreators;
 import me.nanigans.pandorashop2.Utils.Items.InventoryUtils;
 import me.nanigans.pandorashop2.Utils.Items.Items;
+import org.bukkit.ChatColor;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.json.simple.parser.ParseException;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +24,7 @@ import java.util.Map;
 public class UtilItemClick {
 
     private static final List<String> utilList = Arrays.asList("goTo", "purchaseButton", "sellButton", "pageForward", "pageBackwards",
-            "increasePurchaseItem", "decreasePurchaseItem", "extraItems");
+            "increasePurchaseItem", "decreasePurchaseItem", "extraItems", "addEnchantment");
     private final ShopClickEvents shopInfo;
 
     public UtilItemClick(ShopClickEvents shopInfo){
@@ -50,10 +53,70 @@ public class UtilItemClick {
 
    }
 
-   public void enchantPage(Map<String, Object> itemClicked){
 
-       
+    /**
+     * Enchants the item being help when a player clicks on the specified enchantment item
+     * @param player the player to add the enchantment to
+     * @param enchantment the enchantment to add
+     * @param power the power of the enchantment
+     * @param bought the item that was bought
+     * @throws IOException error
+     * @throws ParseException error
+     */
+   public void enchantItem(Player player, Enchantment enchantment, int power, ItemStack bought) throws IOException, ParseException {
 
+       ItemStack item = player.getInventory().getItemInHand();
+
+       if(item != null){
+           if(ShopActionUtils.buy(this.shopInfo, bought)) {
+               ItemMeta meta = item.getItemMeta();
+               meta.addEnchant(enchantment, power+1, false);
+               item.setItemMeta(meta);
+               player.getInventory().setItemInHand(item);
+               player.openInventory(InventoryUtils.createInventoryShop(this.shopInfo.getShopNameDir()+"/Categories.json", 1, player));
+           }
+       }else{
+           player.sendMessage(ChatColor.RED+"Please hold an item to enchant");
+           player.closeInventory();
+       }
+
+   }
+
+    /**
+     * Creates an enchantment inventory to enchant the held item
+     * @param itemClicked the item clicked to get here
+     * @return a new inventory
+     */
+   public Inventory addEnchantment(Map<String, Object> itemClicked){
+
+       Map<String, Object> shopData = ((Map<String, Object>)itemClicked.get("shopData"));
+       if(shopData.containsKey("addEnchantment") && shopData.get("addEnchantment") != null) {
+           final Map<String, Object> addEnchantment = (Map<String, Object>) shopData.get("addEnchantment");
+
+           if (addEnchantment != null && addEnchantment.size() > 0) {
+               if(addEnchantment.entrySet().iterator().hasNext()) {
+                   final Map.Entry<String, Object> next = addEnchantment.entrySet().iterator().next();
+
+                   final String s = next.getValue().toString();
+                   Enchantment enchantment = Enchantments.getByName(s);
+                   if(enchantment != null){
+                           Inventory inv = InventoryUtils.createEnchantmentItemInventory(this.shopInfo.getPlayer(),
+                                   this.shopInfo.getClicked(), enchantment);
+
+                           if (inv != null) {
+                               this.shopInfo.getPlayer().openInventory(inv);
+                               this.shopInfo.setInv(inv);
+                               this.shopInfo.setCurrentShopPath(this.shopInfo.getShopNameDir() + "/addEnchantment.json");
+                               this.shopInfo.setPage(1);
+                           }
+
+                   }
+               }
+
+           }
+       }
+
+       return null;
    }
 
     /**
@@ -72,7 +135,7 @@ public class UtilItemClick {
 
            if(inv != null) {
                this.shopInfo.getPlayer().openInventory(inv);
-               this.shopInfo.setCurrentShopPath(this.shopInfo.getCurrentShopPath()+"_");
+               this.shopInfo.setCurrentShopPath(this.shopInfo.getCurrentShopPath()+"extraItems.json");
                this.shopInfo.setInv(inv);
                this.shopInfo.setPage(1);
            }

@@ -45,7 +45,6 @@
           },
           "_comment3": "^ Will change the item by the amount of this it",
           "addEnchantment": {
-            "enabled": true,
             "enchantment": "SHARPNESS"
           }
         }

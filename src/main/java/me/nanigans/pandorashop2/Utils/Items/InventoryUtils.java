@@ -1,21 +1,62 @@
 package me.nanigans.pandorashop2.Utils.Items;
 
+import com.earth2me.essentials.Enchantments;
 import me.nanigans.pandorashop2.PandoraShop2;
 import me.nanigans.pandorashop2.Utils.Config.JsonUtils;
 import me.nanigans.pandorashop2.Utils.PathUtils.ShopPath;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 public class InventoryUtils {
 
     private static final PandoraShop2 plugin = PandoraShop2.getPlugin(PandoraShop2.class);
+
+
+    /**
+     * Creates a new enchantment page
+     * @param player the player to enchant stuff
+     * @param item the item clicked to get here
+     * @param enchantment the enchantment to add
+     * @return
+     */
+    public static Inventory createEnchantmentItemInventory(Player player, ItemStack item, Enchantment enchantment){
+
+        int maxEnchant = enchantment.getMaxLevel();
+        Inventory inv = Bukkit.createInventory(player, 27, "Add Enchantments");
+
+        for (int i = 0; i < maxEnchant; i++) {
+
+            ItemStack enchClone = item.clone();
+            enchClone.setAmount(i+1);
+            ItemMeta meta = enchClone.getItemMeta();
+            List<String> lore = meta.getLore();
+
+            meta.addEnchant(enchantment, i+1, false);
+            Items.updatePriceLore(enchClone, enchClone.getAmount());
+
+            lore.add("Set " + ChatColor.DARK_AQUA + enchantment.getName() + " " + i);
+            lore.add("to your item. (This will not add the enchantment");
+            lore.add("to previous enchantments)");
+            meta.setLore(lore);
+            enchClone.setItemMeta(meta);
+
+            inv.setItem(i+11, enchClone);
+
+        }
+
+        return inv;
+
+    }
 
     /**
      * Creates an extra item purchase inventory
