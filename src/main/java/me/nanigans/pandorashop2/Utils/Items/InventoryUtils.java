@@ -31,7 +31,7 @@ public class InventoryUtils {
      * @param enchantment the enchantment to add
      * @return
      */
-    public static Inventory createEnchantmentItemInventory(Player player, ItemStack item, Enchantment enchantment){
+    public static Inventory createEnchantmentItemInventory(Player player, ItemStack item, Enchantment enchantment, Map<String, Object> itemInfo){
 
         int maxEnchant = enchantment.getMaxLevel();
         Inventory inv = Bukkit.createInventory(player, 27, "Add Enchantments");
@@ -47,7 +47,7 @@ public class InventoryUtils {
             List<String> lore = meta.getLore();
 
             meta.addEnchant(enchantment, i+1, false);
-            Items.updatePriceLore(enchClone, enchClone.getAmount());
+            Items.updatePriceLore(enchClone, enchClone.getAmount(), itemInfo);
             String normalName = Enchantments.entrySet().stream().filter(e -> e.getValue().getName().equals(enchantment.getName())).collect(Collectors.toList()).get(0).getKey();
 
             lore.add("Set " + ChatColor.DARK_AQUA + (normalName == null ? enchantment.getName() : normalName) + " " + (i+1));
@@ -71,7 +71,7 @@ public class InventoryUtils {
      * @param item the item being sold
      * @return a new inventory with extra items to buy
      */
-    public static Inventory createExtraItemsInventory(Player player, Map<String, Object> itemData, ItemStack item) {
+    public static Inventory createExtraItemsInventory(Player player, Map<String, Object> itemData, ItemStack item, Map<String, Object> itemInfo) {
 
         Map<String, Object> shopData = (Map<String, Object>) itemData.get("shopData");
         Map<String, Object> extraItems = ((Map<String, Object>) shopData.get("extraItems"));
@@ -90,7 +90,13 @@ public class InventoryUtils {
 
                     ItemStack clone = item.clone();
                     clone.setAmount(Integer.parseInt(itemPositions.getKey()));
-                    Items.updatePriceLore(clone, clone.getAmount()*64);
+                    Items.updatePriceLore(clone, clone.getAmount()*64, itemInfo);
+                    final ItemMeta itemMeta = clone.getItemMeta();
+                    final List<String> lore = itemMeta.getLore();
+                    lore.add("Right click to sell");
+                    lore.add("Left click to buy");
+                    itemMeta.setLore(lore);
+                    clone.setItemMeta(itemMeta);
                     if(itemPositions.getValue().equals("0"))
                         itemPositions.setValue("1");
 

@@ -31,6 +31,10 @@ public final class PandoraShop2 extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         registerGlow();
+        getCommand("nbtshow").setExecutor(new NBTGet());
+        getCommand("createshop").setExecutor(new CreateShop());
+        getCommand("createshop").setTabCompleter(new CreateShopTab());
+        getServer().getPluginManager().registerEvents(new NPCEvents(), this);
 
         File configFile = new File(getDataFolder()+"/InventoryPage.json");
 
@@ -47,19 +51,12 @@ public final class PandoraShop2 extends JavaPlugin {
             }
 
         }
-
         try {
             ConfigCreators.createFile(getDataFolder() + "/Shops/Shop/Categories.json");
             ConfigCreators.createDefaultJsonData(new File(getDataFolder() + "/Shops/Shop/Categories.json"), this);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-        getCommand("nbtshow").setExecutor(new NBTGet());
-        getCommand("createshop").setExecutor(new CreateShop());
-        getCommand("createshop").setTabCompleter(new CreateShopTab());
-        getServer().getPluginManager().registerEvents(new NPCEvents(), this);
 
     }
 

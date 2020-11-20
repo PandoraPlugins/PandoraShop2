@@ -121,7 +121,7 @@ public class UtilItemClick {
                    Enchantment enchantment = Enchantments.getByName(s);
                    if(enchantment != null){
                            Inventory inv = InventoryUtils.createEnchantmentItemInventory(this.shopInfo.getPlayer(),
-                                   this.shopInfo.getClicked(), enchantment);
+                                   this.shopInfo.getClicked(), enchantment, itemClicked);
 
                        InventoryUtils.backBtn(inv, shopInfo.getPlayer(), shopInfo, "addEnchantment.json");
 
@@ -147,7 +147,7 @@ public class UtilItemClick {
                ((Map<String, Object>)itemClicked.get("shopData")).get("extraItems") != null){
 
            ItemStack beingSold = InventoryUtils.getBuyingItem(this.shopInfo.getShopNameDir(), this.shopInfo.getInv(), this.shopInfo.getPage());
-           Inventory inv = InventoryUtils.createExtraItemsInventory(this.shopInfo.getPlayer(), itemClicked, beingSold);
+           Inventory inv = InventoryUtils.createExtraItemsInventory(this.shopInfo.getPlayer(), itemClicked, beingSold, this.shopInfo.getItemInPurchase());
 
            if(inv != null) {
                InventoryUtils.backBtn(inv, shopInfo.getPlayer(), shopInfo, "/extraItems.json");
@@ -162,8 +162,8 @@ public class UtilItemClick {
     /**
      * Decreases the item in question by the item clicked amount
      * @param itemClicked the item the signifies to decrease the item
-     * @throws IOException
-     * @throws ParseException
+     * @throws IOException err
+     * @throws ParseException err
      */
     public void decreasePurchaseItem(Map<String, Object> itemClicked) throws IOException, ParseException {
 
@@ -172,11 +172,17 @@ public class UtilItemClick {
 
             ItemStack item = InventoryUtils.getBuyingItem(this.shopInfo.getShopNameDir(), this.shopInfo.getInv(), this.shopInfo.getPage());
             if (item != null) {
-                int incAmt = Integer.parseInt(itemClicked.get("amount").toString());
-                final int amount = item.getAmount() - incAmt;
+                if(item.getAmount() > 1) {
+                    try {
+                        final int decAmt = Integer.parseInt(itemClicked.get("amount").toString());
+                        final int amount = item.getAmount() - decAmt;
 
-                item.setAmount(Math.max(1, amount));
-                Items.updatePriceLore(item, item.getAmount());
+                        item.setAmount(Math.max(1, amount));
+                        Items.updatePriceLore(item, item.getAmount(), this.shopInfo.getItemInPurchase());
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+                }
 
             }
         }
@@ -185,24 +191,24 @@ public class UtilItemClick {
     /**
      * Increases the item in question by the item clicked amount
      * @param itemClicked the item the signifies to increase the item
-     * @throws IOException
-     * @throws ParseException
      */
 
-   public void increasePurchaseItem(Map<String, Object> itemClicked) throws IOException, ParseException {
+   public void increasePurchaseItem(Map<String, Object> itemClicked) {
 
        if(((Map<String, Object>)itemClicked.get("shopData")).containsKey("increasePurchaseItem") &&
                Boolean.parseBoolean(((Map<String, Object>)itemClicked.get("shopData")).get("increasePurchaseItem").toString())) {
 
            try {
                ItemStack item = InventoryUtils.getBuyingItem(this.shopInfo.getShopNameDir(), this.shopInfo.getInv(), this.shopInfo.getPage());
-
                if (item != null) {
-                   int incAmt = Integer.parseInt(itemClicked.get("amount").toString());
-                   final int amount = item.getAmount() + incAmt;
+                   if(item.getAmount() < 64){
 
-                   item.setAmount(Math.min(amount, 64));
-                   Items.updatePriceLore(item, item.getAmount());
+                       int incAmt = Integer.parseInt(itemClicked.get("amount").toString());
+                       final int amount = item.getAmount() + incAmt;
+
+                       item.setAmount(Math.min(amount, 64));
+                       Items.updatePriceLore(item, item.getAmount(), this.shopInfo.getItemInPurchase());
+                    }
 
                }
            }catch(Exception e){
@@ -232,7 +238,7 @@ public class UtilItemClick {
                 ShopActionUtils.sell(this.shopInfo, sellItem);
                 Inventory backInv = InventoryUtils.createInventoryShop(this.shopInfo.getShopNameDir() + "/Categories.json", 1, this.shopInfo.getPlayer());
                 if (backInv != null) {
-                    InventoryUtils.backBtn(inv, shopInfo.getPlayer(), shopInfo, "/Categories.json");
+                    InventoryUtils.backBtn(backInv, shopInfo.getPlayer(), shopInfo, "/Categories.json");
 
                 }
                 else this.shopInfo.getPlayer().closeInventory();
@@ -244,10 +250,8 @@ public class UtilItemClick {
     /**
      * This will make the player buy the item being bought
      * @param purchasedItem the item clicked in the inventory
-     * @throws IOException IOException
-     * @throws ParseException ParseException
      */
-   public void purchaseButton(Map<String, Object> purchasedItem) throws IOException, ParseException {
+   public void purchaseButton(Map<String, Object> purchasedItem) {
 
        if(((Map<String, Object>)purchasedItem.get("shopData")).containsKey("purchaseButton") &&
                Boolean.parseBoolean(((Map<String, Object>)purchasedItem.get("shopData")).get("purchaseButton").toString())) {
@@ -256,17 +260,22 @@ public class UtilItemClick {
 
            String purchInv = this.shopInfo.getShopNameDir();
 
-           ItemStack buyingItem = InventoryUtils.getBuyingItem(
-                   purchInv, inv, this.shopInfo.getPage());
+           try {
+               ItemStack buyingItem = InventoryUtils.getBuyingItem(
+                       purchInv, inv, this.shopInfo.getPage());
 
-           if (buyingItem != null) {
-               ShopActionUtils.buy(this.shopInfo, buyingItem);
-               Inventory backInv = InventoryUtils.createInventoryShop(this.shopInfo.getShopNameDir() + "/Categories.json", 1, this.shopInfo.getPlayer());
-               if (backInv != null) {
-                   InventoryUtils.backBtn(inv, shopInfo.getPlayer(), shopInfo, "/Categories.json");
+               if (buyingItem != null) {
+                   ShopActionUtils.buy(this.shopInfo, buyingItem);
+                   Inventory backInv = InventoryUtils.createInventoryShop(this.shopInfo.getShopNameDir() + "/Categories.json", 1, this.shopInfo.getPlayer());
+                   if (backInv != null) {
+                       InventoryUtils.backBtn(backInv, shopInfo.getPlayer(), shopInfo, "/Categories.json");
 
+                   } else this.shopInfo.getPlayer().closeInventory();
+               } else {
+                   this.shopInfo.getPlayer().sendMessage(ChatColor.RED + "Nothing is being purchased here");
                }
-               else this.shopInfo.getPlayer().closeInventory();
+           }catch(Exception e){
+               e.printStackTrace();
            }
        }
    }

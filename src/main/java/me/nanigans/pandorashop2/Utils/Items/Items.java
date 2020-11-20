@@ -41,29 +41,27 @@ public class Items {
 
     }
 
-    public static ItemStack updatePriceLore(ItemStack item, int itemAmt){
+    public static void updatePriceLore(ItemStack item, int itemAmt, Map<String, Object> itemInfo){
 
-        List<Double> unitPrice = getUnitPrice(item);
+        final Map<String, Object> shopData = (Map<String, Object>) itemInfo.get("shopData");
         ItemMeta meta = Items.stripPriceLore(item.clone()).getItemMeta();
 
-        assert unitPrice != null;
-        if(unitPrice.get(0) != null){
+        if(shopData.containsKey("buyPrice") && shopData.get("buyPrice") != null){
 
-            double price = unitPrice.get(0);
+            double price = Double.parseDouble(shopData.get("buyPrice").toString());
             List<String> lore = meta.getLore() == null ? new ArrayList<>() : meta.getLore();
             lore.add(ChatColor.GRAY+"Buy Price: $" +ChatColor.RED+ (price*itemAmt));
             meta.setLore(lore);
         }
+        if(shopData.containsKey("sellPrice") && shopData.get("sellPrice") != null){
 
-        if(unitPrice.get(1) != null){
+            double price = Double.parseDouble(shopData.get("sellPrice").toString());
             List<String> lore = meta.getLore() == null ? new ArrayList<>() : meta.getLore();
-            lore.add(ChatColor.GRAY+"Sell Price: $" +ChatColor.GREEN+ (unitPrice.get(1)*itemAmt));
+            lore.add(ChatColor.GRAY+"Sell Price: $" +ChatColor.GREEN+ (price*itemAmt));
             meta.setLore(lore);
         }
 
         item.setItemMeta(meta);
-
-        return item;
 
     }
 
@@ -76,7 +74,8 @@ public class Items {
             List<String> lore = meta.getLore();
             if(lore.stream().anyMatch(i -> i.contains("Buy Price: $") || i.contains("Sell Price: $"))){
 
-                List<String> collect = Arrays.asList(lore.stream().filter(i -> i.contains("Buy Price: $")).findAny().orElse(null), lore.stream().filter(i -> i.contains("Sell Price: $")).findAny().orElse(null));
+                List<String> collect = Arrays.asList(lore.stream().filter(i -> i.contains("Buy Price: $")).findAny().orElse(null),
+                        lore.stream().filter(i -> i.contains("Sell Price: $")).findAny().orElse(null));
 
                 for (int i = 0; i < collect.size(); i++) {
 
@@ -126,7 +125,8 @@ public class Items {
 
         if(lore != null){
 
-            lore = lore.stream().filter(i -> !i.contains("Buy Price:") && !i.contains("Sell Price:")).collect(Collectors.toList());
+            lore = lore.stream().filter(i -> !i.contains("Buy Price:") && !i.contains("Sell Price:") &&
+                    !i.contains("Right click to sell") && !i.contains("Left click to buy")).collect(Collectors.toList());
             meta.setLore(lore);
         }
         item.setItemMeta(meta);

@@ -4,6 +4,7 @@ import me.nanigans.pandorashop2.PandoraShop2;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -23,12 +24,12 @@ public class CreateShop implements CommandExecutor {
                 if(PandoraShop2.hasPerms(player, "Shop.Create")) {
 
                     if (args.length > 0) {
-                        NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, ChatColor.translateAlternateColorCodes('&', args[0]));
+                        NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, ChatColor.translateAlternateColorCodes('&', String.join(" ", args)));
                         npc.data().setPersistent("IsShop", plugin.getDataFolder() + "/Shops/" + ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', npc.getName())));
 
                         npc.spawn(player.getLocation());
 
-                        player.sendMessage(ChatColor.GREEN + "Shop: " + ChatColor.YELLOW + args[0] + ChatColor.GREEN + " created!");
+                        player.sendMessage(ChatColor.GREEN + "Shop: " + ChatColor.YELLOW + String.join(" ", args) + ChatColor.GREEN + " created!");
 
                     } else {
                         sender.sendMessage(ChatColor.RED + "Please specify a shop name");
