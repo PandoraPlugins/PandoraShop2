@@ -16,43 +16,53 @@ import org.json.simple.parser.ParseException;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@FunctionalInterface
+interface methods{
+    void execute(Map<String, Object> jsonItem) throws IOException, ParseException;
+}
+
 public class UtilItemClick {
 
+    private Map<String, methods> methods = new HashMap<>();
     private static final List<String> utilList = Arrays.asList("goTo", "purchaseButton", "sellButton", "pageForward", "pageBackwards",
             "increasePurchaseItem", "decreasePurchaseItem", "extraItems", "addEnchantment");
     private final ShopClickEvents shopInfo;
 
-    public UtilItemClick(ShopClickEvents shopInfo){
-        this.shopInfo = shopInfo;
-    }
-
     /**
      * This will find the method that an item clicked has according to its json shopData
-     * @param jsonItem the item clicked
      * @param shopInfo shop info for th eplayer
      */
-   public UtilItemClick(Map<String, Object> jsonItem, ShopClickEvents shopInfo) {
+   public UtilItemClick(ShopClickEvents shopInfo) {
 
        this.shopInfo = shopInfo;
 
-       for (Map.Entry<String, Object> method : ((Map<String, Object>)jsonItem.get("shopData")).entrySet()) {
-
-           try {
-               this.getClass().getMethod(method.getKey(), Map.class).invoke(this, jsonItem);
-           }catch(NoSuchMethodException | InvocationTargetException | IllegalAccessException ignored){
-//               if(!(ignored.getCause() instanceof NoSuchMethodException) && !(ignored.getCause() instanceof InvocationTargetException))
-//               ignored.printStackTrace();
-           }
-
-       }
+       methods.put("goTo", this::goTo);
+       methods.put("purchaseButton", this::purchaseButton);
+       methods.put("sellButton", this::sellButton);
+       methods.put("pageForward", this::pageForward);
+       methods.put("pageBackwards", this::pageBackwards);
+       methods.put("increasePurchaseItem", this::increasePurchaseItem);
+       methods.put("decreasePurchaseItem", this::decreasePurchaseItem);
+       methods.put("extraItems", this::extraItems);
+       methods.put("addEnchantment", this::addEnchantment);
+       methods.put("buyPrice", this::buyPrice);
+       methods.put("sellPrice", this::sellPrice);
 
    }
 
+   public void execute(Map<String, Object> jsonData) throws IOException, ParseException {
+
+       for (Map.Entry<String, Object> method : ((Map<String, Object>)jsonData.get("shopData")).entrySet()) {
+           System.out.println("method = " + method);
+           if (methods.containsKey(method.getKey()))
+               methods.get(method.getKey()).execute(jsonData);
+       }
+   }
 
     /**
      * Enchants the item being help when a player clicks on the specified enchantment item
@@ -105,9 +115,8 @@ public class UtilItemClick {
     /**
      * Creates an enchantment inventory to enchant the held item
      * @param itemClicked the item clicked to get here
-     * @return a new inventory
      */
-   public Inventory addEnchantment(Map<String, Object> itemClicked){
+   public void addEnchantment(Map<String, Object> itemClicked){
 
        Map<String, Object> shopData = ((Map<String, Object>)itemClicked.get("shopData"));
        if(shopData.containsKey("addEnchantment") && shopData.get("addEnchantment") != null) {
@@ -132,7 +141,6 @@ public class UtilItemClick {
            }
        }
 
-       return null;
    }
 
     /**
@@ -265,7 +273,9 @@ public class UtilItemClick {
                        purchInv, inv, this.shopInfo.getPage());
 
                if (buyingItem != null) {
-                   ShopActionUtils.buy(this.shopInfo, buyingItem);
+                   if(!ShopActionUtils.buy(this.shopInfo, buyingItem)){
+                       System.out.println("false = " + false);
+                   }
                    Inventory backInv = InventoryUtils.createInventoryShop(this.shopInfo.getShopNameDir() + "/Categories.json", 1, this.shopInfo.getPlayer());
                    if (backInv != null) {
                        InventoryUtils.backBtn(backInv, shopInfo.getPlayer(), shopInfo, "/Categories.json");

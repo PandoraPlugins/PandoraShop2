@@ -118,8 +118,8 @@ public class InventoryUtils {
      * @param inv the inventory currently looked at
      * @param page the page of the inventory
      * @return a new ItemStack of the item being bought
-     * @throws IOException
-     * @throws ParseException
+     * @throws IOException err
+     * @throws ParseException err
      */
     public static ItemStack getBuyingItem(String purchaseInvPath, Inventory inv, int page) throws IOException, ParseException {
 

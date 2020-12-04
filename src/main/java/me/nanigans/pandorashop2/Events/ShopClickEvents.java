@@ -12,7 +12,6 @@ import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -38,6 +37,7 @@ public class ShopClickEvents implements Listener {
     private ClickType clickType;
     private ItemStack clicked;
     private boolean inChangingInventory = false;
+    private UtilItemClick itemClick;
 
     /**
      * Initializes a customer of the shop
@@ -52,6 +52,7 @@ public class ShopClickEvents implements Listener {
         this.shopNameDir = shopPath;
         this.page = 1;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        this.itemClick = new UtilItemClick(this);
     }
 
     /**
@@ -91,13 +92,13 @@ public class ShopClickEvents implements Listener {
                     if (!this.currentShopPath.endsWith("extraItems.json") && !this.currentShopPath.endsWith("addEnchantment.json")) {
                         Map<String, Object> item = Items.getJsonItem(event.getSlot(), this.page, this.currentShopPath);
                         if (item != null)
-                            new UtilItemClick(item, this);
+                            this.itemClick.execute(item);
 
                     }else if(this.currentShopPath.endsWith("extraItems.json")){
 
                         ItemStack clickedCopy = clicked.clone();
                         clickedCopy.setAmount(clicked.getAmount()*64);
-                        new UtilItemClick(this).purchaseStack(clickedCopy, this.clickType.isLeftClick());
+                        this.itemClick.purchaseStack(clickedCopy, this.clickType.isLeftClick());
 
                     }else if(this.currentShopPath.endsWith("addEnchantment.json")){
 
@@ -110,7 +111,7 @@ public class ShopClickEvents implements Listener {
                             Enchantment enchantment = Enchantments.getByName(s[0]);
                             int level = Integer.parseInt(s[1]);
 
-                            new UtilItemClick(this).enchantItem(this.player, enchantment, level, this.clicked);
+                            this.itemClick.enchantItem(this.player, enchantment, level, this.clicked);
 
                         }
 
@@ -137,7 +138,6 @@ public class ShopClickEvents implements Listener {
 
         if(event.getPlayer().getUniqueId().equals(this.player.getUniqueId())){
             if(!this.inChangingInventory) {
-                HandlerList.unregisterAll(this);
                 this.finalize();
             }
         }
